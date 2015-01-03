@@ -32,14 +32,14 @@ namespace OrbItProcs
 
         public void SetRadius(Node n)
         {
-            n.body.radius = radiusCenter;
+            n.radius = radiusCenter;
             if (radiusRange.enabled)
             {
-                n.body.radius = (float)Utils.random.NextDouble() * radiusRange.value - (radiusRange.value / 2) + radiusCenter;
+                n.radius = (float)Utils.random.NextDouble() * radiusRange.value - (radiusRange.value / 2) + radiusCenter;
             }
             //
             //n.body.angularVelocity = 2;
-            n.collision.active = false;
+            //n.collision.active = false;
             n.addComponent<Gravity>(true);
         }
         public void RemoveAll()
@@ -142,8 +142,8 @@ namespace OrbItProcs
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
                     Action<Node> after = delegate(Node n) { 
-                        n.body.velocity = diff;
-                        if (n.body.velocity.IsFucked()) System.Diagnostics.Debugger.Break();
+                        n.rigidbody.velocity = diff;
+                        if (n.rigidbody.velocity.IsFucked()) System.Diagnostics.Debugger.Break();
                     
                     }; 
                     SetRadius(room.spawnNode(userP, after));

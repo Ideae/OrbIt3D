@@ -190,7 +190,7 @@ namespace OrbItProcs
         public override Vector2 GetRightStick(float radius, bool drawRing = false)
         {
             Vector2 mousePos = OInput.WorldMousePos;// Input.mousePosition;
-            Vector2 playerPos = player.node.body.pos;//(player.node.body.pos - player.room.camera.virtualTopLeft) * player.room.camera.zoom + player.room.camera.CameraOffsetVect;
+            Vector2 playerPos = player.node.transform.position;//(player.node.transform.position - player.room.camera.virtualTopLeft) * player.room.camera.zoom + player.room.camera.CameraOffsetVect;
             Vector2 dir = mousePos - playerPos;
             float lensqr = dir.sqrMagnitude;
             if (lensqr > radius * radius)
@@ -206,7 +206,7 @@ namespace OrbItProcs
             {
                 float scale = (radius * 2f) / Assets.textureDict[textures.ring].texture.width;
                 float alpha = (((float)Math.Sin(Time.timeSinceLevelLoad * 1000 / 300f) + 1f) / 4f) + 0.25f;
-                player.room.camera.Draw(textures.ring, player.node.body.pos, player.pColor * alpha, scale, Layers.Under2);
+                player.room.camera.Draw(textures.ring, player.node.transform.position, player.pColor * alpha, scale, Layers.Under2);
             }
             return dir;
         }

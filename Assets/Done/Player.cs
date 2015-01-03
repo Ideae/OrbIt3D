@@ -16,7 +16,7 @@ namespace OrbItProcs
         public Room room;
         public Node _node;
         public Node node { get { return _node; } set { if (_node != null) _node.player = null; _node = value; if (value != null) value.player = this; } }
-        public Body body { get { return node != null ? node.body : null; } }
+        //public Body body { get { return node != null ? node.body : null; } }
 
         public int playerIndex;
 
@@ -219,11 +219,11 @@ namespace OrbItProcs
             float dist = 200;
             float x = dist * (float)Math.Cos(angle);
             float y = dist * (float)Math.Sin(angle);
-            Vector2 spawnPos = new Vector2((room.worldWidth / 4) * playerIndex - (room.worldWidth / 8), room.worldHeight - 600);// -new Vector2(x, y);
+            Vector2 spawnPos = new Vector2((room.worldSize.x / 4) * playerIndex - (room.worldSize.x / 8), room.worldSize.y - 600);// -new Vector2(x, y);
             Node node = defaultNode.CreateClone(room);
             p.node = node;
             
-            node.body.pos = spawnPos;
+            node.transform.position = spawnPos;
             node.name = "player" + p.ColorName;
             node.SetColor(p.pColor);
             //node.addComponent(comp.shooter, true);
@@ -233,7 +233,7 @@ namespace OrbItProcs
             //room.groups.player.IncludeEntity(node);
             node.meta.healthBar = Meta.HealthBarMode.Bar;
             //node.OnSpawn();
-            node.body.velocity = Vector2.zero;
+            node.rigidbody.velocity = Vector2.zero;
             //node.body.mass = 0.1f;
             node.movement.maxVelocity.value = 6f;
             node.addComponent<Shooter>(true);

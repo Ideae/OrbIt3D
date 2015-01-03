@@ -112,7 +112,7 @@ namespace OrbItProcs
         /// The radius of the node.
         /// </summary>
         [Info(UserLevel.User, "The radius of the node.")]
-        public float radius { get { return parent != null ? parent.body.radius : 25; } set { if (parent != null) parent.body.radius = value; } }
+        public float radius { get { return parent != null ? parent.radius : 25; } set { if (parent != null) parent.radius = value; } }
         private float lightRotation = 0f;
         public Action<Node, Node> OnDeath { get; set; }
         public Action<Node, Node, int> OnTakeDamage { get; set; }
@@ -152,7 +152,7 @@ namespace OrbItProcs
                 currentHealth = (float)Math.Max(currentHealth - resultingDamage, 0);
                 currentHealth = (float)Math.Min(currentHealth, maxHealth.value);
                 float percent = 0.65f;
-                if (healthBar == HealthBarMode.Fade) parent.body.color = parent.body.permaColor * ((currentHealth / maxHealth.value) * percent + (1f - percent));
+                if (healthBar == HealthBarMode.Fade) parent.material.color = parent.permaColor * ((currentHealth / maxHealth.value) * percent + (1f - percent));
                 if (currentHealth <= 0)
                 {
                     //Die(other);
@@ -191,7 +191,7 @@ namespace OrbItProcs
                     case ItemSlots.Y_Yellow: Q = Color.yellow; break;
                     default: Q = Color.black; break;
                 }
-                //room.camera.Draw(textures.pointer, parent.body.pos, Q, parent.body.scale, parent.body.orient, Layers.Over4);
+                //room.camera.Draw(textures.pointer, parent.transform.position, Q, parent.body.scale, parent.body.orient, Layers.Over4);
                 draw.getSprite("Pointer").SetColor(Q);
                 ItemSlots itemSlots = parent.player.occupiedSlots;
                 textures A, B, X, Y;
@@ -200,10 +200,10 @@ namespace OrbItProcs
                 X = (itemSlots & ItemSlots.X_Blue) == ItemSlots.X_Blue ? textures.itemLight : textures.itemWhisper;
                 Y = (itemSlots & ItemSlots.Y_Yellow) == ItemSlots.Y_Yellow ? textures.itemLight : textures.itemWhisper;
 
-                //room.camera.Draw(A, parent.body.pos, Color.green, parent.body.scale * 1.7f, lightRotation, Layers.Under2);
-                //room.camera.Draw(B, parent.body.pos, Color.red, parent.body.scale * 1.7f, lightRotation + GMath.PIbyTwo, Layers.Under2);
-                //room.camera.Draw(X, parent.body.pos, Color.blue, parent.body.scale * 1.7f, lightRotation + GMath.PI, Layers.Under2);
-                //room.camera.Draw(Y, parent.body.pos, Color.yellow, parent.body.scale * 1.7f, lightRotation + GMath.PI + GMath.PIbyTwo, Layers.Under2);
+                //room.camera.Draw(A, parent.transform.position, Color.green, parent.body.scale * 1.7f, lightRotation, Layers.Under2);
+                //room.camera.Draw(B, parent.transform.position, Color.red, parent.body.scale * 1.7f, lightRotation + GMath.PIbyTwo, Layers.Under2);
+                //room.camera.Draw(X, parent.transform.position, Color.blue, parent.body.scale * 1.7f, lightRotation + GMath.PI, Layers.Under2);
+                //room.camera.Draw(Y, parent.transform.position, Color.yellow, parent.body.scale * 1.7f, lightRotation + GMath.PI + GMath.PIbyTwo, Layers.Under2);
                 draw.getSprite("A").SetTexture(A).SetRotation(lightRotation);
                 draw.getSprite("B").SetTexture(B).SetRotation(lightRotation + GMath.PIbyTwo);
                 draw.getSprite("X").SetTexture(X).SetRotation(lightRotation + GMath.PI);
@@ -216,7 +216,7 @@ namespace OrbItProcs
 
         public static void drawBar(Node node, float scale, float Ratio, bool Rotate, Color full, Color? threeQuarters = null, Color? half = null, Color? oneQuarter = null)
         {
-            float baseRotation = Rotate ? node.body.orient : 0f;
+            float baseRotation = Rotate ? node.transform.localEulerAngles.x : 0f;
             float rotation = baseRotation + (1f - Ratio) * GMath.TwoPI;
             float rotation2 = baseRotation;
             Color c;
@@ -237,11 +237,12 @@ namespace OrbItProcs
                 hideLayer = Layers.Over3;
                 rotation2 = rotation - GMath.PI;
             }
-            
-            node.room.camera.Draw(textures.outerL, node.body.pos, Color.black, node.body.scale * scale, baseRotation, hideLayer);
-            node.room.camera.Draw(textures.outerR, node.body.pos, Color.black, node.body.scale * scale, baseRotation, Layers.Over1);
-            node.room.camera.Draw(textures.innerL, node.body.pos, c, node.body.scale * scale, rotation, Layers.Over2);
-            node.room.camera.Draw(textures.innerR, node.body.pos, c, node.body.scale * scale, rotation2, Layers.Over2);
+            //float tempscale = node.body.scale;
+            float tempscale = 1f;
+            node.room.camera.Draw(textures.outerL, node.transform.position, Color.black, tempscale * scale, baseRotation, hideLayer);
+            node.room.camera.Draw(textures.outerR, node.transform.position, Color.black, tempscale * scale, baseRotation, Layers.Over1);
+            node.room.camera.Draw(textures.innerL, node.transform.position, c, tempscale * scale, rotation, Layers.Over2);
+            node.room.camera.Draw(textures.innerR, node.transform.position, c, tempscale * scale, rotation2, Layers.Over2);
         }
         public override void OnRemove(Node other)
         {

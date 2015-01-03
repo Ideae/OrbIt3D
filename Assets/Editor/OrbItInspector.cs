@@ -42,22 +42,6 @@ public class OrbItInspector : EditorWindow
         }
         oldGameObject = gameObject;
     }
-    void ShowNodeComponents(GameObject gameObject)
-    {
-        var nodescript = gameObject.GetComponent<NodeScript>();
-        if (nodescript != null && nodescript.node != null)
-        {
-            Node node = nodescript.node;
-            ShowObjectProperties("Body", node.body);
-            if (node.comps != null)
-            {
-                foreach (Type t in node.comps.Keys)
-                {
-                    ShowObjectProperties(t.ToString().LastWord('.'), node.comps[t]);
-                }
-            }
-        }
-    }
     void ShowGameObjectScripts(GameObject gameObject)
     {
         MonoBehaviour[] comps = gameObject.GetComponents<MonoBehaviour>();

@@ -20,12 +20,11 @@ namespace OrbItProcs {
         public Node targetNodeGraphic = null;
         //Components
         public ProcessManager processManager { get; set; }
-        public GridSystem gridsystemAffect { get; set; }
-        public Level level { get; set; }
+        //public GridSystem gridsystemAffect { get; set; }
+        //public Level level { get; set; }
         //public RenderTarget2D roomRenderTarget { get; set; }
         public ThreadedCamera camera { get; set; }
         public Scheduler scheduler { get; set; }
-        public CollisionManager collisionManager { get; set; }
         //Entities
         public Group masterGroup { get; set; }
         public RoomGroups groups { get; private set; }
@@ -39,34 +38,33 @@ namespace OrbItProcs {
         public ObservableHashSet<Link> AllInactiveLinks { get; set; }
         public List<Rect> linesToDraw = new List<Rect>();
         //Values
-        public int worldWidth { get; set; }
-        public int worldHeight { get; set; }
+        public Vector3 worldSize = Vector3.one;
+        //public int worldWidth { get; set; }
+        //public int worldHeight { get; set; }
+        //public int worldDepth { get; set; }
         public bool DrawLinks { get; set; }
         public Node targetNode { get; set; }
         public Color borderColor { get; set; }
-        public bool DrawAffectGrid { get; set; }
-        public bool DrawCollisionGrid { get; set; }
+        //public bool DrawAffectGrid { get; set; }
+        //public bool DrawCollisionGrid { get; set; }
         //Events
         public event EventHandler AfterIteration;
         private Action PendingRoomResize;
-        public Room(OrbIt game, int worldWidth, int worldHeight, bool Groups = true)
+        public Room(OrbIt game, Vector3 worldSize, bool Groups = true)
         {
             groups = new RoomGroups(this);
             AllActiveLinks = new ObservableHashSet<Link>();
             AllInactiveLinks = new ObservableHashSet<Link>();
 
-            this.worldWidth = worldWidth;
-            this.worldHeight = worldHeight;
-
+            this.worldSize = worldSize;
             
             scheduler = new Scheduler();
             borderColor = Color.grey; //DarkGray #unity
             
             // grid System
-            gridsystemAffect = new GridSystem(this, 40, new Vector2(-worldWidth/2, -worldHeight/2), worldWidth, worldHeight);
-            collisionManager = new CollisionManager(this);
-            //gridsystemAffect = new GridSystem(this, 40, new Vector2(0, worldHeight - OrbIt.Height), worldWidth, OrbIt.Height);
-            level = new Level(this, 40, 40, gridsystemAffect.cellWidth, gridsystemAffect.cellHeight);
+            //gridsystemAffect = new GridSystem(this, 40, new Vector2(-worldWidth/2, -worldHeight/2), worldWidth, worldHeight);
+            //collisionManager = new CollisionManager(this);
+            //level = new Level(this, 40, 40, gridsystemAffect.cellWidth, gridsystemAffect.cellHeight);
             //roomRenderTarget = new RenderTarget2D(game.GraphicsDevice, OrbIt.ScreenWidth, OrbIt.ScreenHeight);
             //gridsystemCollision = new GridSystem(this, gridsystemAffect.cellsX, new Vector2(0, worldHeight - OrbIt.Height), worldWidth, OrbIt.Height);
             camera = new ThreadedCamera(this, 1f);
@@ -77,7 +75,7 @@ namespace OrbItProcs {
 
             #region ///Default User props///
             Dictionary<object, object> userPr = new Dictionary<object, object>() {
-                { nodeE.position, new Vector2(0, 0) },
+                { nodeE.position, Vector3.zero },
                 { nodeE.texture, textures.cage },
             };
             #endregion
@@ -93,7 +91,7 @@ namespace OrbItProcs {
                 c.AfterCloning();
             }
 
-            Node firstdefault = new Node(this, ShapeType.Circle);
+            Node firstdefault = new Node(this);
             //firstdefault.addComponent(comp.itempayload, true);
             Node.cloneNode(defaultNode, firstdefault);
             firstdefault.name = "[G0]0";
@@ -190,72 +188,21 @@ namespace OrbItProcs {
         public void Update()
         {
 
-            //FloodFill.boulderFountain();
-            //if (scroll && gameStarted)
-            //{
-            //    if (waitTimeCounter < waitTime)
-            //    {
-            //        waitTimeCounter += gametime.ElapsedGameTime.Milliseconds;
-            //    }
-            //    else
-            //    {
-            //        if (gridsystemAffect.position.y > 0) { gridsystemAffect.position.y -= scrollRate; gridsystemCollision.position.y -= scrollRate; }
-            //        camera.pos = gridsystemCollision.position + new Vector2(gridsystemCollision.gridWidth / 2, gridsystemCollision.gridHeight / 2);
-            //#tojam    //
-            //    }
-            //}
-
             Player.CheckForPlayers(this);
 
             long elapsed = 0;
-            //if (gametime != null) elapsed = (long)Math.Round(gametime.ElapsedGameTime.TotalMilliseconds);
-
             elapsed = (long)(Time.deltaTime * 1000);
             totalElapsedMilliseconds += elapsed;
 
-            HashSet<Node> toDelete = new HashSet<Node>();
-            //if (affectAlgorithm == 1)//OLD for testing
-            //{
-            //    gridsystemAffect.clear();
-            //    foreach (var n in masterGroup.fullSet)
-            //    {
-            //        if (ColorNodesInReach) n.body.color = Color.White;
-            //        if (masterGroup.childGroups["Wall Group"].fullSet.Contains(n)) continue;
-            //        gridsystemAffect.insert(n.body);
-            //    }
-            //}
-            if (affectAlgorithm == 2)
-            {
-                gridsystemAffect.clearBuckets();
-                foreach (var n in masterGroup.fullSet)
-                {
-                    //if (skipOutsideGrid && (n.body.pos.y < gridsystemAffect.position.y || n.body.pos.y > gridsystemAffect.position.y + gridsystemAffect.gridHeight)) continue;
-
-                    if (ColorNodesInReach) n.body.color = Color.white;
-                    if (masterGroup.childGroups["Wall Group"].fullSet.Contains(n)) continue;
-                    gridsystemAffect.insertToBuckets(n.body);
-                }
-            }
-
-            collisionManager.Update();
-
             foreach(Node n in masterGroup.fullSet.ToList())
             {
-                //if (skipOutsideGrid && (n.body.pos.y < gridsystemAffect.position.y || n.body.pos.y > gridsystemAffect.position.y + gridsystemAffect.gridHeight)) continue;
-
-                //if (skipOutsideGrid && !n.body.pos.isWithin(gridsystemAffect.position, gridsystemAffect.position + new Vector2(gridsystemAffect.gridWidth, gridsystemAffect.gridHeight))) continue;
-                
                 if (n.active)
                 {
                     n.Update();
                 }
             }
             if (AfterIteration != null) AfterIteration(this, null);
-
-            //addGridSystemLines(gridsystemCollision);
-            //addLevelLines(level);
-            addBorderLines();
-            //colorEffectedNodes();
+            //addBorderLines();
 
             updateTargetNodeGraphic();
 
@@ -271,22 +218,6 @@ namespace OrbItProcs {
             
         }
 
-
-        public void addBorderLines()
-        {
-            linesToDraw.Add(new Rect(0, 0, worldWidth, 0));
-            linesToDraw.Add(new Rect(0, 0, 0, worldHeight));
-            linesToDraw.Add(new Rect(0, worldHeight, worldWidth, worldHeight));
-            linesToDraw.Add(new Rect(worldWidth, 0, worldWidth, worldHeight));
-
-            //if (totalElapsedMilliseconds > 5000000)
-            //foreach (var item in Assets.textureDict.Keys.ToList())
-            //{
-            //    Assets.textureDict[item] = Assets.textureDict[textures.cage];
-            //}
-        }
-
-
         public void GroupSelectDraw() //todo: make this the draw method in groupselect class
         {
             if (processManager.processDict.ContainsKey(typeof(GroupSelect)))
@@ -294,11 +225,11 @@ namespace OrbItProcs {
                 HashSet<Node> groupset = processManager.GetProcess<GroupSelect>().groupSelectSet;
                 if (groupset != null)
                 {
-                    targetNodeGraphic.body.color = Color.green;//LimeGreen;
+                    targetNodeGraphic.renderer.material.color = Color.green;
                     foreach (Node n in groupset.ToList())
                     {
-                        targetNodeGraphic.body.pos = n.body.pos;
-                        targetNodeGraphic.body.radius = n.body.radius * 1.5f;
+                        targetNodeGraphic.transform.position = n.transform.position;
+                        targetNodeGraphic.radius = n.radius * 1.5f;
                         targetNodeGraphic.Draw();
                     }
                 }
@@ -315,7 +246,7 @@ namespace OrbItProcs {
             GroupSelectDraw();
             foreach(var n in masterGroup.fullSet.ToList()) //todo:wtfuck threading?
             {
-                //if (skipOutsideGrid && (n.body.pos.y < (gridsystemAffect.position.y - gridsystemAffect.gridHeight /2) || n.body.pos.y > gridsystemAffect.position.y + gridsystemAffect.gridHeight)) continue;
+                //if (skipOutsideGrid && (n.transform.position.y < (gridsystemAffect.position.y - gridsystemAffect.gridHeight /2) || n.transform.position.y > gridsystemAffect.position.y + gridsystemAffect.gridHeight)) continue;
                 //Node n = (Node)o;
                 n.Draw();
             }
@@ -324,7 +255,7 @@ namespace OrbItProcs {
             linesToDraw = new List<Rect>();
 
 
-            if (DrawAffectGrid) gridsystemAffect.DrawGrid(this, Color.blue);//LightBlue);
+            //if (DrawAffectGrid) gridsystemAffect.DrawGrid(this, Color.blue);//LightBlue);
 
             if (DrawLinks)
             {
@@ -334,67 +265,16 @@ namespace OrbItProcs {
                 }
             }
             OrbIt.globalGameMode.Draw();
-            //if (linkTest != null) linkTest.GenericDraw(spritebatch);
-
-
-
-            //player1.Draw(spritebatch);
-            //level.Draw(spritebatch);
-
             processManager.Draw(); //find out why we needed this and generalize later
 
-            //GraphData.DrawGraph();
-            //Testing.TestHues();
         }
-
-        public void drawOnly()
-        {
-            //camera.RenderAsync();
-            //Draw();
-            //camera.CatchUp();
-        }
-
-        public void MakeWalls(float WallWidth)
-        {
-            Dictionary<object, object> props = new Dictionary<object, object>() {
-                    { nodeE.position, new Vector2(0, 0) },
-            };
-            Node left = ConstructWallPoly(props, (int)WallWidth / 2, worldHeight / 2, new Vector2(WallWidth / 2, worldHeight / 2)); left.name = "left wall";
-            Node right = ConstructWallPoly(props, (int)WallWidth / 2, worldHeight / 2, new Vector2(worldWidth - WallWidth / 2, worldHeight / 2)); right.name = "right wall";
-            Node top = ConstructWallPoly(props, (worldWidth + (int)WallWidth * 2) / 2, (int)WallWidth / 2, new Vector2(worldWidth / 2, (int)WallWidth / 2)); top.name = "top wall";
-            Node bottom = ConstructWallPoly(props, (worldWidth + (int)WallWidth * 2) / 2, (int)WallWidth / 2, new Vector2(worldWidth / 2, worldHeight - WallWidth / 2)); bottom.name = "bottom wall";
-        }
-
-        public Node ConstructWallPoly(Dictionary<object, object> props, int hw, int hh, Vector2 pos)
-        {
-            Node n = new Node(this, props);
-            n.Comp<BasicDraw>().active = false;
-            Polygon poly = new Polygon();
-            poly.body = n.body;
-            poly.body.pos = pos;
-            poly.SetBox(hw, hh);
-            //poly.SetOrient(0f);
-
-            n.body.shape = poly;
-            n.body.SetStatic();
-            n.body.orient =(0);
-            //n.body.restitution = 1f;
-
-            //n.movement.pushable = false;
-
-            masterGroup.childGroups["Wall Group"].entities.Add(n);
-            return n;
-        }
-
-        
-
         public void updateTargetNodeGraphic()
         {
             if (targetNode != null)
             {
                 targetNodeGraphic.Comp<ColorChanger>().AffectSelf();
-                targetNodeGraphic.body.pos = targetNode.body.pos;
-                targetNodeGraphic.body.radius = targetNode.body.radius * 1.5f;
+                targetNodeGraphic.transform.position = targetNode.transform.position;
+                targetNodeGraphic.radius = targetNode.radius * 1.5f;
             }
         }
 
@@ -410,9 +290,9 @@ namespace OrbItProcs {
             {
                 Node n = (Node)masterGroup.fullSet.ElementAt(i);
                 // find node that has been clicked, starting from the most recently placed nodes
-                float distsquared = Vector2.Distance(n.body.pos, pos);
+                float distsquared = Vector2.Distance(n.transform.position, pos);
                 
-                if (distsquared < n.body.radius)
+                if (distsquared < n.radius)
                 {
                     if (distsquared < shortedDistance)
                     {
@@ -441,7 +321,7 @@ namespace OrbItProcs {
         {
             if (activeGroup == null || !activeGroup.Spawnable) return null;
 
-            Node newNode = new Node(this, ShapeType.Circle);
+            Node newNode = new Node(this);
             if (!blank)
             {
                 Node.cloneNode(activeDefaultNode, newNode);
@@ -477,26 +357,6 @@ namespace OrbItProcs {
             newNode.spawned = true;
             return newNode;
         }
-        internal void resize(Vector2 resizeVect, bool fillWithGrid = false)
-        {
-
-            PendingRoomResize = delegate
-            {
-
-                worldWidth = (int)resizeVect.x;
-                worldHeight = (int)resizeVect.y;
-                int newCellsX = worldWidth / gridsystemAffect.cellWidth;
-                int gridHeight = fillWithGrid ? worldHeight : (int)OrbIt.Height;
-                gridsystemAffect = new GridSystem(this, newCellsX, new Vector2(0, worldHeight - gridHeight), worldWidth, gridHeight);
-                level = new Level(this, newCellsX, newCellsX, gridsystemAffect.cellWidth, gridsystemAffect.cellHeight);
-                //roomRenderTarget = new RenderTarget2D(game.GraphicsDevice, worldWidth, worldHeight);
-                collisionManager.gridsystemCollision = new GridSystem(this, newCellsX, new Vector2(0, worldHeight - gridHeight), worldWidth, gridHeight);
-                fillWithGrid = false;
-
-                //camera.pos = new Vector2(worldWidth / 2, worldHeight / 2);
-            };
-        }
-
 
         public class RoomGroups
         {

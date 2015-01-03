@@ -7,14 +7,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C6EB55BD-FCBE-8091-FE82-66700D37586C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>4.6.1f1</UnityVersion>
@@ -56,10 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Done\Assets.cs" />
     <Compile Include="Assets\Done\BasicDraw.cs" />
-    <Compile Include="Assets\Done\Body.cs" />
-    <Compile Include="Assets\Done\Collider.cs" />
     <Compile Include="Assets\Done\Collision.cs" />
-    <Compile Include="Assets\Done\CollisionManager.cs" />
     <Compile Include="Assets\Done\ColorChanger.cs" />
     <Compile Include="Assets\Done\Component.cs" />
     <Compile Include="Assets\Done\DrawControl.cs" />
@@ -78,7 +77,6 @@
     <Compile Include="Assets\Done\Level.cs" />
     <Compile Include="Assets\Done\Lifetime.cs" />
     <Compile Include="Assets\Done\Link.cs" />
-    <Compile Include="Assets\Done\Manifold.cs" />
     <Compile Include="Assets\Done\Meta.cs" />
     <Compile Include="Assets\Done\Movement.cs" />
     <Compile Include="Assets\Done\Node.cs" />
@@ -93,7 +91,6 @@
     <Compile Include="Assets\Done\RoomComponent.cs" />
     <Compile Include="Assets\Done\Runer.cs" />
     <Compile Include="Assets\Done\Scheduler.cs" />
-    <Compile Include="Assets\Done\Shape.cs" />
     <Compile Include="Assets\Done\SpawnNodes.cs" />
     <Compile Include="Assets\Done\ThreadedCamera.cs" />
     <Compile Include="Assets\Done\Toggle.cs" />

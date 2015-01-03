@@ -207,7 +207,7 @@ namespace OrbItProcs
                 Node nearNode = null;
                 foreach (Node n in room.groups.player.entities)
                 {
-                    float dist = Vector2.Distance(parent.body.pos, n.body.pos);
+                    float dist = Vector2.Distance(parent.transform.position, n.transform.position);
                     if (dist < nearest)
                     {
                         nearNode = n;
@@ -216,7 +216,7 @@ namespace OrbItProcs
                 }
                 if (nearNode != null)
                 {
-                    Vector2 dir = nearNode.body.pos - parent.body.pos;
+                    Vector2 dir = nearNode.transform.position - parent.transform.position;
                     VMath.NormalizeSafe(ref dir);
                     dir.y *= -1;
                     FireNode(dir);
@@ -234,8 +234,8 @@ namespace OrbItProcs
             if (!useStickVelocity) VMath.NormalizeSafe(ref dir);
             Node n = bulletNode.CreateClone(room);
             n.Comp<Lifetime>().timeUntilDeath.value = bulletLife;
-            n.body.velocity = dir * speed;
-            n.body.pos = parent.body.pos;
+            n.rigidbody.velocity = dir * speed;
+            n.transform.position = parent.transform.position;
             n.body.AddExclusionCheck(parent.body);
             //if (parent.HasComp<Sword>())
             //{

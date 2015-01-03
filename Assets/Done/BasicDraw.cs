@@ -166,10 +166,10 @@ namespace OrbItProcs
             //}
 
             
-            //room.camera.Draw(parent.body.texture, parent.body.pos, parent.body.color * (AlphaPercent / 100f), parent.body.scale, parent.body.orient, layer);
-            draw.getSprite("sprite").SetTexture(parent.body.texture).SetPosition(parent.body.pos).SetColor(parent.body.color * (AlphaPercent / 100f)).SetRotation(parent.body.orient);
+            //room.camera.Draw(parent.body.texture, parent.transform.position, parent.body.color * (AlphaPercent / 100f), parent.body.scale, parent.body.orient, layer);
+            draw.getSprite("sprite").SetTexture(parent.body.texture).SetPosition(parent.transform.position).SetColor(parent.body.color * (AlphaPercent / 100f)).SetRotation(parent.body.orient);
 
-            //if(parent.body.texture == textures.boulder1 && DrawSparkles) room.camera.Draw(textures.boulderShine, parent.body.pos, Utils.randomColor(), parent.body.scale, parent.body.orient, layer);
+            //if(parent.body.texture == textures.boulder1 && DrawSparkles) room.camera.Draw(textures.boulderShine, parent.transform.position, Utils.randomColor(), parent.body.scale, parent.body.orient, layer);
         }
     }
 }

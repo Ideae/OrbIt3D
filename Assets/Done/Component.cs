@@ -98,11 +98,11 @@ namespace OrbItProcs
             return (compType & mtypes.item) == mtypes.item;
         }
 
-        public virtual Sprite getSprite()
+        public virtual Texture2D getTexture2D()
         {
             if (parent != null)
             {
-                return parent.getSprite();
+                return parent.getTexture2D();
             }
             return null;
         }

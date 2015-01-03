@@ -94,7 +94,7 @@ namespace OrbItProcs
                     foreach (var pp in playerTeammates[p])
                     {
                         if (p == pp) continue;
-                        game.room.camera.DrawLine(p.node.body.pos, pp.node.body.pos, 3f, Color.white, Layers.Under1);
+                        game.room.camera.DrawLine(p.node.transform.position, pp.node.transform.position, 3f, Color.white, Layers.Under1);
                     }
                 }
             }

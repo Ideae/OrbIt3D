@@ -174,7 +174,7 @@ namespace OrbItProcs
             {
                 foreach (var pack in particlePacks)
                 {
-                    pack.Draw(room, parent.body.pos, parent.body.color);
+                    pack.Draw(room, parent.transform.position, parent.body.color);
                 }
             }
             foreach (Component c in payloadNode.comps.Values)

@@ -89,7 +89,7 @@ namespace OrbItProcs
         public override void Draw()
         {
             if (++counter % onceEveryAmount != 0) return; 
-            Vector2 start = parent.body.pos;
+            Vector2 start = parent.transform.position;
             if (prevPos == Vector2.zero)
             {
                 prevPos = start;

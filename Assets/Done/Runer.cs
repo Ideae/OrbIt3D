@@ -43,7 +43,7 @@ namespace OrbItProcs
         public override void Draw()
         {
             Color col = parent.body.color.ContrastColor();
-            room.camera.Draw(runeTexture, parent.body.pos, col, parent.body.scale, parent.body.orient,Layers.Over1);
+            room.camera.Draw(runeTexture, parent.transform.position, col, parent.body.scale, parent.body.orient,Layers.Over1);
         }
     }
 }

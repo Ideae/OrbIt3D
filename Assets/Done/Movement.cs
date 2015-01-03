@@ -74,55 +74,21 @@ namespace OrbItProcs
             if (randInitialVel) RandomizeVelocity();
             moderateVelocity();
         }
-        private void IntegrateForces()
-        {
-            if (!active) return;
-            if (parent.body.invmass == 0)
-                return;
-
-            Body b = parent.body;
-            b.velocity += VMath.MultVectDouble(b.force, b.invmass); //* dt / 2.0;
-            b.angularVelocity += b.torque * b.invinertia; // * dt / 2.0;
-
-        }
-        public void IntegrateVelocity()
-        {
-            if (!active) return;
-            if (parent.body.invmass == 0)
-            {
-                parent.body.velocity = Vector2.zero;
-                return;
-            }
-            if (effvelocityMode)
-            {
-                parent.body.velocity = parent.body.effvelocity;
-            }
-            else
-            {
-                moderateVelocity();
-                Body b = parent.body;
-                b.pos += b.velocity;
-                b.orient += b.angularVelocity;
-                b.orient = (b.orient);
-                IntegrateForces(); //calls the integrateforces method
-            }
-            AffectSelf();
-        }
 
         [Clickable]
         public void moderateVelocity()
         {
-            double velSquared = parent.body.velocity.x * parent.body.velocity.x + parent.body.velocity.y * parent.body.velocity.y;
+            double velSquared = parent.rigidbody.velocity.x * parent.rigidbody.velocity.x + parent.rigidbody.velocity.y * parent.rigidbody.velocity.y;
 
             if (minVelocity.enabled && velSquared < minVelocity * minVelocity)
             {
-                VMath.NormalizeSafe(ref parent.body.velocity);
-                parent.body.velocity *= minVelocity;
+                VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                parent.rigidbody.velocity *= minVelocity;
             }
             if (maxVelocity.enabled && velSquared > maxVelocity * maxVelocity)
             {
-                VMath.NormalizeSafe(ref parent.body.velocity);
-                parent.body.velocity *= maxVelocity;
+                VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                parent.rigidbody.velocity *= maxVelocity;
             }
         }
         public void RandomizeVelocity()
@@ -133,29 +99,29 @@ namespace OrbItProcs
             VMath.NormalizeSafe(ref vel);
             //vel.Normalize();
             vel = vel * randInitialVel;
-            parent.body.velocity = vel;
+            parent.rigidbody.velocity = vel;
         }
         [Clickable]
         public void scaleVelocity()
         {
-            if (parent.body.velocity.x != 0 && parent.body.velocity.y != 0)
+            if (parent.rigidbody.velocity.x != 0 && parent.rigidbody.velocity.y != 0)
             {
-                VMath.NormalizeSafe(ref parent.body.velocity);
-                parent.body.velocity *= randInitialVel;
+                VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                parent.rigidbody.velocity *= randInitialVel;
             }
         }
 
         public override void AffectSelf()
         {
-            //parent.body.position.x += parent.body.velocity.x * VelocityModifier;
-            //parent.body.position.y += parent.body.velocity.y * VelocityModifier;
+            //parent.body.position.x += parent.rigidbody.velocity.x * VelocityModifier;
+            //parent.body.position.y += parent.rigidbody.velocity.y * VelocityModifier;
             //return;
             if (mode == movemode.screenwrap) screenWrap();
             if (mode == movemode.wallbounce) wallBounce();
             if (mode == movemode.falloff)    fallOff();
             if (mode == movemode.halt) halt();
 
-            //GraphData.AddFloat(parent.body.pos.x);
+            //GraphData.AddFloat(parent.transform.position.x);
 
             //Trippy();
         }
@@ -164,7 +130,7 @@ namespace OrbItProcs
         {
             //test (holy SHIT that looks cool)
             PropertyInfo pi = parent.body.GetType().GetProperty("scale");
-            pi.SetValue(parent.body, parent.body.pos.x % 4.0f, null);
+            pi.SetValue(parent.body, parent.transform.position.x % 4.0f, null);
         }
         public float absaccel = 0.2f;
         public float friction = 0.01f;
@@ -176,16 +142,6 @@ namespace OrbItProcs
             Vector2 stick = input.GetLeftStick();
             Vector2 stick2 = input.GetRightStick();
             
-                //if (node != bigtony) node.collision.colliders["trigger"].radius = body.radius * 1.5f;
-                //else node.collision.colliders["trigger"].radius = body.radius * 1.2f;
-                //bool clicked = false;
-                //clicked = hc.newHalfPadState.Btn3 == ButtonState.Pressed || hc.newHalfPadState.Btn1 == ButtonState.Pressed;
-                //
-                //if (clicked)
-                //{
-                //    SwitchPlayer(stick);
-                //}
-
             
             if (stick2.sqrMagnitude > 0.6f * 0.6f)
             {
@@ -203,9 +159,9 @@ namespace OrbItProcs
 
             stick *= 0.4f;
             stick *= absaccel;
-            if ((parent.body.velocity.x != 0 || parent.body.velocity.y != 0))
+            if ((parent.rigidbody.velocity.x != 0 || parent.rigidbody.velocity.y != 0))
             {
-                stick += parent.body.velocity * -friction;
+                stick += parent.rigidbody.velocity * -friction;
             }
             stick *= parent.body.mass;
             //todo: update maxvel?
@@ -219,7 +175,7 @@ namespace OrbItProcs
             int levelwidth = room.worldWidth;
             int levelheight = room.worldHeight;
 
-            Vector2 pos = parent.body.pos;
+            Vector2 pos = parent.transform.position;
 
             //if (parent.HasComp<Queuer>() && (parent.Comp<Queuer>().qs & queues.position) == queues.position)
             //{
@@ -228,20 +184,20 @@ namespace OrbItProcs
             //    pos = positions.ElementAt(0);
             //}
 
-            if (pos.x >= (levelwidth + parent.body.radius))
+            if (pos.x >= (levelwidth + parent.radius))
             {
                 parent.IsDeleted = true;
             }
-            else if (pos.x < parent.body.radius * -1)
+            else if (pos.x < parent.radius * -1)
             {
                 parent.IsDeleted = true;
             }
 
-            if (pos.y >= (levelheight + parent.body.radius))
+            if (pos.y >= (levelheight + parent.radius))
             {
                 parent.IsDeleted = true;
             }
-            else if (pos.y < parent.body.radius * -1)
+            else if (pos.y < parent.radius * -1)
             {
                 parent.IsDeleted = true;
             }
@@ -261,41 +217,41 @@ namespace OrbItProcs
             int maxY = (int)(OrbIt.origin.y + halfheight);
             int minY = (int)(OrbIt.origin.y - halfheight);
 
-            if (parent.body.pos.x >= (maxX - parent.body.radius))
+            if (parent.transform.position.x >= (maxX - parent.radius))
             {
-                //float off = parent.body.pos.x - (levelwidth - parent.body.radius);
-                //parent.body.pos.x = (levelwidth - parent.body.radius - off) % room.worldWidth;
-                parent.body.pos.x = GMath.Triangle(parent.body.pos.x, maxX - (int)parent.body.radius);
-                if (parent.body.velocity.x > 0)
-                    parent.body.velocity.x *= -1;
+                //float off = parent.transform.position.x - (levelwidth - parent.radius);
+                //parent.transform.position.x = (levelwidth - parent.radius - off) % room.worldWidth;
+                parent.transform.position.x = GMath.Triangle(parent.transform.position.x, maxX - (int)parent.radius);
+                if (parent.rigidbody.velocity.x > 0)
+                    parent.rigidbody.velocity.x *= -1;
                 //parent.body.InvokeOnCollisionStay(null); //todo: find out why we needed null, fix this
 
             }
-            if (parent.body.pos.x < minX + parent.body.radius)
+            if (parent.transform.position.x < minX + parent.radius)
             {
-                //float off = parent.body.radius - parent.body.pos.x;
-                //parent.body.pos.x = (parent.body.radius + off) % room.worldWidth;
-                parent.body.pos.x = GMath.Triangle(parent.body.pos.x - parent.body.radius + halfwidth, room.worldWidth) + parent.body.radius - halfwidth;
-                if (parent.body.velocity.x < 0)
-                    parent.body.velocity.x *= -1;
+                //float off = parent.radius - parent.transform.position.x;
+                //parent.transform.position.x = (parent.radius + off) % room.worldWidth;
+                parent.transform.position.x = GMath.Triangle(parent.transform.position.x - parent.radius + halfwidth, room.worldWidth) + parent.radius - halfwidth;
+                if (parent.rigidbody.velocity.x < 0)
+                    parent.rigidbody.velocity.x *= -1;
                 //parent.body.InvokeOnCollisionStay(null);
             }
-            if (parent.body.pos.y >= (maxY - parent.body.radius))
+            if (parent.transform.position.y >= (maxY - parent.radius))
             {
-                //float off = parent.body.pos.y - (levelheight - parent.body.radius);
-                //parent.body.pos.y = (levelheight - parent.body.radius - off) % room.worldHeight;
-                parent.body.pos.y = GMath.Triangle(parent.body.pos.y, maxY - (int)parent.body.radius);
-                if (parent.body.velocity.y > 0)
-                    parent.body.velocity.y *= -1;
+                //float off = parent.transform.position.y - (levelheight - parent.radius);
+                //parent.transform.position.y = (levelheight - parent.radius - off) % room.worldHeight;
+                parent.transform.position.y = GMath.Triangle(parent.transform.position.y, maxY - (int)parent.radius);
+                if (parent.rigidbody.velocity.y > 0)
+                    parent.rigidbody.velocity.y *= -1;
                 //parent.body.InvokeOnCollisionStay(null);
             }
-            if (parent.body.pos.y < minY + parent.body.radius)
+            if (parent.transform.position.y < minY + parent.radius)
             {
-                //float off = parent.body.radius - parent.body.pos.y;
-                //parent.body.pos.y = (parent.body.radius + off) % room.worldHeight;
-                parent.body.pos.y = GMath.Triangle(parent.body.pos.y - parent.body.radius + halfheight, room.worldHeight) + parent.body.radius - halfheight;
-                if (parent.body.velocity.y < 0)
-                    parent.body.velocity.y *= -1;
+                //float off = parent.radius - parent.transform.position.y;
+                //parent.transform.position.y = (parent.radius + off) % room.worldHeight;
+                parent.transform.position.y = GMath.Triangle(parent.transform.position.y - parent.radius + halfheight, room.worldHeight) + parent.radius - halfheight;
+                if (parent.rigidbody.velocity.y < 0)
+                    parent.rigidbody.velocity.y *= -1;
                 //parent.body.InvokeOnCollisionStay(null);
             }
         }
@@ -307,29 +263,29 @@ namespace OrbItProcs
             int levelwidth = room.worldWidth;
             int levelheight = room.worldHeight;
 
-            if (parent.body.pos.x >= (levelwidth - parent.body.radius))
+            if (parent.transform.position.x >= (levelwidth - parent.radius))
             {
-                parent.body.pos.x = levelwidth - parent.body.radius;
-                parent.body.velocity.x *= 0;
+                parent.transform.position.x = levelwidth - parent.radius;
+                parent.rigidbody.velocity.x *= 0;
                 parent.body.InvokeOnCollisionStay(null);
 
             }
-            if (parent.body.pos.x < parent.body.radius)
+            if (parent.transform.position.x < parent.radius)
             {
-                parent.body.pos.x = parent.body.radius;
-                parent.body.velocity.x *= 0;
+                parent.transform.position.x = parent.radius;
+                parent.rigidbody.velocity.x *= 0;
                 parent.body.InvokeOnCollisionStay(null);
             }
-            if (parent.body.pos.y >= (levelheight - parent.body.radius))
+            if (parent.transform.position.y >= (levelheight - parent.radius))
             {
-                parent.body.pos.y = levelheight - parent.body.radius;
-                parent.body.velocity.y *= 0;
+                parent.transform.position.y = levelheight - parent.radius;
+                parent.rigidbody.velocity.y *= 0;
                 parent.body.InvokeOnCollisionStay(null);
             }
-            if (parent.body.pos.y < parent.body.radius)
+            if (parent.transform.position.y < parent.radius)
             {
-                parent.body.pos.y = parent.body.radius;
-                parent.body.velocity.y *= 0;
+                parent.transform.position.y = parent.radius;
+                parent.rigidbody.velocity.y *= 0;
                 parent.body.InvokeOnCollisionStay(null);
             }
 
@@ -347,40 +303,40 @@ namespace OrbItProcs
             //todo: modulus screen width
             //hitting top/bottom of screen
             //teleport node
-            if (parent.body.pos.x >= levelwidth)
+            if (parent.transform.position.x >= levelwidth)
             {
-                parent.body.pos.x = parent.body.pos.x - levelwidth;//1;
+                parent.transform.position.x = parent.transform.position.x - levelwidth;//1;
             }
-            else if (parent.body.pos.x < 0)
+            else if (parent.transform.position.x < 0)
             {
-                parent.body.pos.x = levelwidth - parent.body.pos.x;//1;
+                parent.transform.position.x = levelwidth - parent.transform.position.x;//1;
             }
             //show half texture on other side
-            if (parent.body.pos.x >= (levelwidth - parent.body.radius))
+            if (parent.transform.position.x >= (levelwidth - parent.radius))
             {
                 //
             }
-            else if (parent.body.pos.x < parent.body.radius)
+            else if (parent.transform.position.x < parent.radius)
             {
                 //
             }
 
             //hitting sides
             //teleport node
-            if (parent.body.pos.y >= levelheight)
+            if (parent.transform.position.y >= levelheight)
             {
-                parent.body.pos.y = parent.body.pos.y - levelheight;//1;
+                parent.transform.position.y = parent.transform.position.y - levelheight;//1;
             }
-            else if (parent.body.pos.y < 0)
+            else if (parent.transform.position.y < 0)
             {
-                parent.body.pos.y = levelheight - parent.body.pos.y;//1;
+                parent.transform.position.y = levelheight - parent.transform.position.y;//1;
             }
             //show half texture on other side
-            if (parent.body.pos.y >= (levelheight - parent.body.radius))
+            if (parent.transform.position.y >= (levelheight - parent.radius))
             {
                 //
             }
-            else if (parent.body.pos.y < parent.body.radius)
+            else if (parent.transform.position.y < parent.radius)
             {
                 //
             }

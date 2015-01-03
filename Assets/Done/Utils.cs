@@ -272,7 +272,7 @@ namespace OrbItProcs {
             return GuidString;
         }
         ///dontdelete. sorry
-        public static bool IsFucked(this Vector2 v)
+        public static bool IsFucked(this Vector3 v)
         {
             if (float.IsInfinity(v.x) || float.IsNaN(v.x) || float.IsInfinity(v.y) || float.IsNaN(v.y)) return true;
             return false;
@@ -378,89 +378,16 @@ namespace OrbItProcs {
                 //    kvp.Key, kvp.Value);
             }
         }
-        //public static void DrawLine(Room room, Vector2 start, Vector2 end, float thickness, Color color, Layers Layer)
-        //{
-        //    if (thickness * room.zoom < 1) thickness = 1 / room.zoom;
-        //    Vector2 diff = (end - start);// *mapzoom;
-        //    Vector2 centerpoint = (end + start) / 2;
-        //    //centerpoint *= mapzoom;
-        //    float len = diff.Length();
-        //    //thickness *= 2f * mapzoom;
-        //    Vector2 scalevect = new Vector2(len, thickness);
-        //    float angle = (float)(Math.Atan2(diff.y, diff.x));
-        //    room.camera.Draw(textures.whitepixel, centerpoint, null, color, angle, Assets.textureCenters[textures.whitepixel], scalevect, Layer);
-        //}
-
-        public static bool checkCollision(Node o1, Node o2)
-        {
-            if (Vector2.Distance(o1.body.pos, o2.body.pos) <= o1.body.radius + o2.body.radius)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static void resolveCollision(Node o1, Node o2)
-        {
-            float distanceOrbs = (float)Vector2.Distance(o1.body.pos, o2.body.pos);
-            if (distanceOrbs < 10) distanceOrbs = 10; //prevent /0 error
-            Vector2 normal = (o2.body.pos - o1.body.pos) / distanceOrbs;
-            float pvalue = 2 * (o1.body.velocity.x * normal.x + o1.body.velocity.y * normal.y - o2.body.velocity.x * normal.x - o2.body.velocity.y * normal.y) / (o1.body.mass + o2.body.mass);
-
-            o1.body.velocity.x = o1.body.velocity.x - pvalue * normal.x * o2.body.mass;
-            o1.body.velocity.y = o1.body.velocity.y - pvalue * normal.y * o2.body.mass;
-            o2.body.velocity.x = o2.body.velocity.x + pvalue * normal.x * o1.body.mass;
-            o2.body.velocity.y = o2.body.velocity.y + pvalue * normal.y * o1.body.mass;
-            //float loss1 = 0.98f;
-            //float loss2 = 0.98f;
-            //o1.transform.velocity *= loss1;
-            //o2.transform.velocity *= loss2;
-            fixCollision(o1, o2);
-        }
-
-        //make sure that if the orbs are stuck together, they are separated.
-        public static void fixCollision(Node o1, Node o2)
-        {
-            //float orbRadius = 25.0f; //integrate this into the orb class
-            //if the orbs are still within colliding distance after moving away (fix radius variables)
-            //if (Vector2.DistanceSquared(o1.transform.position + o1.transform.velocity, o2.transform.position + o2.transform.velocity) <= ((o1.transform.radius * 2) * (o2.transform.radius * 2)))
-            if (Vector2.Distance(o1.body.pos + o1.body.velocity, o2.body.pos + o2.body.velocity) <= o1.body.radius + o2.body.radius)
-            {
-
-                Vector2 difference = o1.body.pos - o2.body.pos; //get the vector between the two orbs
-                float length = Vector2.Distance(o1.body.pos, o2.body.pos);//get the length of that vector
-                difference = difference / length;//get the unit vector
-                //fix the below statement to get the radius' from the orb objects
-                length = (o1.body.radius + o2.body.radius) - length; //get the length that the two orbs must be moved away from eachother
-                difference = difference * length; // produce the vector from the length and the unit vector
-                if (o1.movement.active && o1.movement.pushable
-                    && o2.movement.active && o2.movement.pushable)
-                {
-                    o1.body.pos += difference / 2;
-                    o2.body.pos -= difference / 2;
-                }
-                else if (o1.movement.active && !o1.movement.pushable)
-                {
-                    o2.body.pos -= difference;
-                }
-                else if (o2.movement.active && !o2.movement.pushable)
-                {
-                    o1.body.pos += difference;
-                }
-            }
-            else return;
-        }
-
         public static void Infect(Node newNode)
         {
             if (Utils.random.Next(50000) == 0)
             {
-                newNode.body.color = Color.red;
+                newNode.material.color = Color.red;
                 Action<Node, Node> evil = null;
                 Action<Node> doAfter = delegate(Node n)
                 {
-                    n.body.color = Color.red;
-                    n.body.OnCollisionStay += evil;
+                    n.material.color = Color.red;
+                    //n.body.OnCollisionStay += evil;
                 };
 
 

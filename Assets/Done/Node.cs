@@ -39,9 +39,9 @@ namespace OrbItProcs {
 
     public class Node {
         public GameObject gameobject;
-        public static float defaultNodeSize = 15f;
+        public static float defaultNodeSize = 1f;
         public static int nodeCounter = 0;
-        private Vector2 tempPosition = new Vector2(0, 0);
+        private Vector3 tempPosition = Vector3.zero;
         public List<string> nodeHistory = new List<string>();
         public bool spawned = false;
 
@@ -65,7 +65,6 @@ namespace OrbItProcs {
                         tempCompActiveValues[t] = comps[t].active;
                         comps[t].active = false;
                     }
-                    collision.RemoveCollidersFromSet();
                 }
                 else if (!_active && value)
                 {
@@ -74,7 +73,6 @@ namespace OrbItProcs {
                         if (tempCompActiveValues.ContainsKey(t)) comps[t].active = tempCompActiveValues[t];
                         else comps[t].active = true;
                     }
-                    if (collision != null) collision.UpdateCollisionSet();
                 }
                 _active = value;
             }
@@ -121,16 +119,16 @@ namespace OrbItProcs {
         private HashSet<string> _tags = new HashSet<string>();
         public HashSet<string> tags { get { return _tags; } set { _tags = value; } }
 
-        private Body _body;
-        public Body body
-        {
-            get { return _body; }
-            set
-            {
-                _body = value;
-            } 
-        }
-
+        //private Body _body;
+        //public Body body
+        //{
+        //    get { return _body; }
+        //    set
+        //    {
+        //        _body = value;
+        //    } 
+        //}
+        //
         private Movement _movement;
         public Movement movement
         {
@@ -149,23 +147,23 @@ namespace OrbItProcs {
             }
         }
 
-        private Collision _collision;
-        public Collision collision
-        {
-            get { return _collision; }
-            set
-            {
-                _collision = value;
-                if (comps != null && value != null)
-                {
-                    if (HasComp<Collision>())
-                    {
-                        comps.Remove(typeof(Collision));
-                    }
-                    comps.Add(typeof(Collision), value);
-                }
-            }
-        }
+        //private Collision _collision;
+        //public Collision collision
+        //{
+        //    get { return _collision; }
+        //    set
+        //    {
+        //        _collision = value;
+        //        if (comps != null && value != null)
+        //        {
+        //            if (HasComp<Collision>())
+        //            {
+        //                comps.Remove(typeof(Collision));
+        //            }
+        //            comps.Add(typeof(Collision), value);
+        //        }
+        //    }
+        //}
         private BasicDraw _basicdraw;
         public BasicDraw basicdraw
         {
@@ -200,10 +198,11 @@ namespace OrbItProcs {
                 }
             }
         }
+        private textures _texture = textures.whiteorb;
         public textures texture
         {
-            get { return body.texture; }
-            set { body.texture = value; }
+            get { return _texture; }
+            set { _texture = value; }
         }
         private Player _player;
         public Player player { get { return _player; } set { _player = value; if (value != null) SortComponentListsUpdate(); } }
@@ -216,6 +215,7 @@ namespace OrbItProcs {
         public ObservableHashSet<Link> TargetLinks { get { return _TargetLinks; } set { _TargetLinks = value; } }
         private Group _group;
         public Group group { get { return _group; } set { _group = value; } }
+
         
         
         [Info(UserLevel.Never)]
@@ -253,17 +253,31 @@ namespace OrbItProcs {
         {
             if (val == nodeE.active) active = (bool)dict[val];
             if (val == nodeE.name) name = (string)dict[val];
-            if (val == nodeE.position) body.pos = (Vector2)dict[val];
-            if (val == nodeE.velocity) body.velocity = (Vector2)dict[val];
-            if (val == nodeE.radius) body.radius = (float)dict[val];
-            if (val == nodeE.mass) body.mass = (float)dict[val];
-            if (val == nodeE.texture) body.texture = (textures)dict[val];
-            if (val == nodeE.color) body.color = (Color)dict[val];
+            if (val == nodeE.position) transform.position = (Vector2)dict[val];
+            if (val == nodeE.velocity) rigidbody.velocity = (Vector2)dict[val];
+            if (val == nodeE.radius) radius = (float)dict[val];
+            if (val == nodeE.mass) rigidbody.mass = (float)dict[val];
+            if (val == nodeE.texture) texture = (textures)dict[val];
+            if (val == nodeE.color) renderer.material.color = (Color)dict[val];
             
         }
+        public float radius
+        {
+            get { return transform.localScale.x; }
+            set { transform.localScale = new Vector3(value, value, value); }
+        }
+        //lower performance because of check for null
+        public Transform transform { get { return gameobject != null ? gameobject.transform : null; } }
+        public Collider collider { get { return gameobject != null ? gameobject.collider : null; } }
+        public Rigidbody rigidbody { get { return gameobject != null ? gameobject.rigidbody : null; } }
+        public Renderer renderer { get { return gameobject != null ? gameobject.renderer : null; } }
+        public Material material { get { return gameobject != null ? gameobject.renderer.material : null; } }
+        public Color permaColor;
 
-        public Node(Room room) : this(room, ShapeType.Circle) { }
-        public Node(Room room, ShapeType shapetype)
+        public Vector3 effvelocity = Vector3.zero;
+
+        //public Node(Room room) : this(room, ShapeType.Circle) { }
+        public Node(Room room)//, ShapeType shapetype)
         {
             this.room = room;
             //("Everyone else must use the Parameterized constructor and pass a room reference.");
@@ -272,36 +286,30 @@ namespace OrbItProcs {
             meta = new Meta(this);
             movement = new Movement(this);
             
-            Shape shape = null;
-            if (shapetype == ShapeType.Circle)
-            {
-                shape = new Circle(defaultNodeSize);
-            }
-            else if (shapetype == ShapeType.Polygon)
-            {
-                shape = new Polygon();
-            }
-
-            body = new Body(shape: shape, parent: this);
-            body.radius = defaultNodeSize;
-            collision = new Collision(this);
+            
+            radius = defaultNodeSize;
             basicdraw = new BasicDraw(this);
-            movement.active = true; collision.active = true; basicdraw.active = true;
+            movement.active = true; 
+            basicdraw.active = true;
             IsAI = false;
             affectAction = (source, other) =>
             {
                 //todo: extend to check for every component for finer control if necessary
-                if (source.parent.AffectExclusionCheck != null && source.parent.AffectExclusionCheck(other.parent)) return;
-                foreach (Type t in source.parent.aOtherProps)
+                if (source.AffectExclusionCheck != null && source.AffectExclusionCheck(other)) return;
+                foreach (Type t in source.aOtherProps)
                 {
-                    if (!source.parent.comps[t].active) continue;
-                    source.parent.comps[t].AffectOther(other.parent);
+                    if (!source.comps[t].active) continue;
+                    source.comps[t].AffectOther(other);
                 }
             };
+
+            gameobject = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("NodePrefab"));
+            gameobject.SetActive(false);
+
         }
-        Action<Collider, Collider> affectAction;
-        public Node(Room room, Dictionary<object, object> userProps, ShapeType shapetype = ShapeType.Circle)
-            : this(room, shapetype)
+        Action<Node, Node> affectAction;
+        public Node(Room room, Dictionary<object, object> userProps)//, ShapeType shapetype = ShapeType.Circle)
+            : this(room)//, shapetype)
         {
             if (userProps != null)
             {
@@ -325,29 +333,29 @@ namespace OrbItProcs {
             SortComponentLists();
         }
 
-        public static Node ContructLineWall(Room room, Vector2 start, Vector2 end, int thickness, Dictionary<object, object> props = null, bool addToWallGroup = true)
-        {
-            float dist = Vector2.Distance(start, end);
-            int halfheight = (int)(dist / 2);
-            int halfwidth = thickness / 2;
-            float angle = VMath.VectorToAngle(start - end);
+        //public static Node ContructLineWall(Room room, Vector2 start, Vector2 end, int thickness, Dictionary<object, object> props = null, bool addToWallGroup = true)
+        //{
+        //    float dist = Vector2.Distance(start, end);
+        //    int halfheight = (int)(dist / 2);
+        //    int halfwidth = thickness / 2;
+        //    float angle = VMath.VectorToAngle(start - end);
 
-            Node n = new Node(room, props, ShapeType.Polygon);
-            Polygon p = (Polygon)n.body.shape;
-            n.body.orient = angle;
-            p.SetBox(halfwidth, halfheight, false);
-            n.body.pos = (start + end) / 2;
-            n.body.DrawPolygonCenter = false;
-            
+        //    Node n = new Node(room, props, ShapeType.Polygon);
+        //    Polygon p = (Polygon)n.body.shape;
+        //    n.body.orient = angle;
+        //    p.SetBox(halfwidth, halfheight, false);
+        //    n.transform.position = (start + end) / 2;
+        //    n.body.DrawPolygonCenter = false;
 
-            n.body.SetStatic();
-            if (addToWallGroup)
-            {
-                room.masterGroup.childGroups["Wall Group"].IncludeEntity(n);
-                n.OnSpawn();
-            }
-            return n;
-        }
+
+        //    n.body.SetStatic();
+        //    if (addToWallGroup)
+        //    {
+        //        room.masterGroup.childGroups["Wall Group"].IncludeEntity(n);
+        //        n.OnSpawn();
+        //    }
+        //    return n;
+        //}
 
         public T Comp<T>() where T : Component
         {
@@ -406,85 +414,26 @@ namespace OrbItProcs {
         {
             if (IsPlayer)
             {
-                body.angularVelocity = 0;
+                rigidbody.angularVelocity = Vector3.zero;
             }
 
-            if (!movement.pushable && tempPosition != new Vector2(0, 0))
+            if (!movement.pushable && tempPosition != Vector3.zero)
             {
-                body.pos = tempPosition;
-                body.velocity = Vector2.zero;
+                transform.position = tempPosition;
+                rigidbody.velocity = Vector2.zero;
             }
             previousFramePosition = tempPosition;
-            body.effvelocity = body.pos - tempPosition;
-            tempPosition = body.pos;
+            effvelocity = transform.position - tempPosition;
+            tempPosition = transform.position;
             
-            //collision.ClearCollisionList();
-            collision.ClearCollisionLists();
             if (nodeState == state.off || nodeState == state.drawOnly) return;
 
             if (aOtherProps.Count > 0)
             {
-                if (room.affectAlgorithm == 1)
+                //if (meta.IgnoreAffectGrid) //always ignore gridsystem for now
+                foreach(Node n in room.masterGroup.fullSet)
                 {
-                    List<Collider> returnObjectsFinal = new List<Collider>();
-
-                    int reach; //update later based on cell size and radius (or polygon size.. maybe based on it's AABB)
-                    if (body.shape is Polygon)
-                    {
-                        reach = 20;
-                    }
-                    else
-                    {
-                        //reach = (int)(body.radius * 5) / room.gridsystem.cellWidth;
-                        reach = 10;
-                    }
-                    returnObjectsFinal = room.gridsystemAffect.retrieve(body, reach);
-                    returnObjectsFinal.Remove(body);
-                    if (AffectExclusionCheck == null)
-                    {
-                        foreach (Collider other in returnObjectsFinal)
-                        {
-                            if (room.ColorNodesInReach && this == room.targetNode && other is Body) (other as Body).color = Color.magenta;
-                            if (other.parent.active)
-                            {
-                                foreach (Type t in aOtherProps)
-                                {
-                                    if (!comps[t].active) continue;
-                                    comps[t].AffectOther(other.parent);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (Collider other in returnObjectsFinal)
-                        {
-                            if (room.ColorNodesInReach && this == room.targetNode && other is Body) (other as Body).color = Color.magenta;
-                            if (other.parent.active)
-                            {
-                                if (AffectExclusionCheck(other.parent)) continue; //todo: extend to check for every component for finer control if necessary
-                                foreach (Type t in aOtherProps)
-                                {
-                                    if (!comps[t].active) continue;
-                                    comps[t].AffectOther(other.parent);
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (room.affectAlgorithm == 2)
-                {
-                    if (meta.IgnoreAffectGrid)
-                    {
-                        foreach(Node n in room.masterGroup.fullSet)
-                        {
-                            affectAction(body, n.body);
-                        }
-                    }
-                    else
-                    {
-                        room.gridsystemAffect.retrieveOffsetArraysAffect(body, affectAction, affectionReach);
-                    }
+                    affectAction(this, n);
                 }
             }
             if (OnAffectOthers != null) OnAffectOthers.Invoke(this, null);
@@ -527,10 +476,8 @@ namespace OrbItProcs {
             {
                 RemoveComponentTriggered();
             }
-            //gameobject.transform.position = body.pos;
-            gameobject.transform.position = new Vector3(body.pos.x, body.pos.y, 0);
-            //gameobject.transform.rotation = Quaternion.AngleAxis(body.orient * Mathf.Rad2Deg, Vector3.forward);
-            gameobject.transform.eulerAngles = new Vector3(0, 0, body.orient * Mathf.Rad2Deg);
+            //gameobject.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            //gameobject.transform.eulerAngles = new Vector3(0, 0, body.orient * Mathf.Rad2Deg);
             //Debug.Log(body.orient);
         }
         //may implement this optimization if there are more affect others compoenents based on grabbing surrounding nodes from buckets
@@ -540,7 +487,6 @@ namespace OrbItProcs {
         //    //affectOthers.Sort((a, b) => )
         //
         //}
-
 
         public void Draw()
         {
@@ -653,11 +599,6 @@ namespace OrbItProcs {
             if (t == typeof(Movement))//todo: add more essentials here
             {
                 movement.active = active;
-                return false;
-            }
-            else if (t == typeof(Collision))
-            {
-                collision.active = active;
                 return false;
             }
             else if (t == typeof(BasicDraw))
@@ -866,35 +807,35 @@ namespace OrbItProcs {
                 }
             }
         }
-        public Sprite getSprite()
+        public Texture2D getTexture2D()
         {
-            try { return Assets.textureDict[body.texture]; }
-            catch { Debug.Log(body.texture); return null; }
-
+            try { return Assets.textureDict[texture]; }
+            catch { Debug.Log(texture + " exception"); return null; }
         }
         public Vector2 TextureCenter()
         { 
-            Texture2D tx = Assets.textureDict[body.texture].texture;
+            Texture2D tx = Assets.textureDict[texture];
             return new Vector2(tx.width / 2f, tx.height / 2f); // TODO: maybe cast to floats to make sure it's the exact center.
         }
         
         public void SetColor(Color c)
         {
-            body.color = c;
-            body.permaColor = c;
+            renderer.material.color = c;
+            permaColor = c;
             basicdraw.UpdateColor();
         }
         public float diameter()
         {
-            return body.radius * 2;
+            return radius * 2;
         }
 
         public void OnSpawn()
         {
-            gameobject = new GameObject(name);//, typeof(SpriteRenderer));
+            //gameobject = new GameObject(name);//, typeof(SpriteRenderer));
             //gameobject.GetComponent<SpriteRenderer>().sprite = Assets.textureDict[body.texture];
             gameobject.transform.parent = OrbIt.game.transform;
-            NodeScript.AddNodeScript(gameobject, this);
+            //NodeScript.AddNodeScript(gameobject, this);
+            gameobject.SetActive(true);
 
             foreach (Type key in comps.Keys.ToList())
             {
@@ -1011,26 +952,11 @@ namespace OrbItProcs {
                     Color newcol = new Color(col.r, col.g, col.b, col.a);
                     field.SetValue(destNode, newcol);
                 }
-                else if (field.FieldType == (typeof(Collision)))
-                {
-                    Component.CloneComponent(sourceNode.collision, destNode.collision);
-                    destNode.collision.parent = destNode;
-                    destNode.collision.AfterCloning();
-                }
                 else if (field.FieldType == (typeof(Movement)))
                 {
                     Component.CloneComponent(sourceNode.movement, destNode.movement);
                     destNode.movement.parent = destNode;
                     destNode.movement.AfterCloning();
-                }
-                else if (field.FieldType == (typeof(Body)))
-                {
-                    //Component.CloneComponent(sourceNode.body, destNode.body);
-
-                    Component.CloneObject(sourceNode.body, destNode.body);
-                    destNode.body.parent = destNode;
-                    destNode.body.shape.body = destNode.body;
-                    destNode.body.AfterCloning();
                 }
             }
         }

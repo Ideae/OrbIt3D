@@ -527,12 +527,12 @@ namespace OrbItProcs
                         color1 = sourceNode.body.color;
                     }
 
-                    Vector2 diff = target.body.pos - source.body.pos;
+                    Vector2 diff = target.transform.position - source.transform.position;
                     Vector2 perp = new Vector2(diff.y, -diff.x);
                     VMath.NormalizeSafe(ref perp);
                     perp *= 2;
 
-                    room.camera.DrawLine(source.body.pos, target.body.pos, 2f, color1, Layers.Under3);
+                    room.camera.DrawLine(source.transform.position, target.transform.position, 2f, color1, Layers.Under3);
 
                     //Utils.DrawLine(spritebatch, source.transform.position + perp, target.transform.position + perp, 2f, col, room);
                     //Utils.DrawLine(spritebatch, source.transform.position - perp, target.transform.position - perp, 2f, col, room);
@@ -540,11 +540,11 @@ namespace OrbItProcs
                     if (!DrawTips) continue;
                     perp *= 20;
 
-                    Vector2 center = (target.body.pos + source.body.pos) / 2;
+                    Vector2 center = (target.transform.position + source.transform.position) / 2;
 
-                    Vector2 point = target.body.pos - (diff / 5);
-                    room.camera.DrawLine(point + perp, target.body.pos, 2f, color1, Layers.Under3);
-                    room.camera.DrawLine(point - perp, target.body.pos, 2f, color1, Layers.Under3);
+                    Vector2 point = target.transform.position - (diff / 5);
+                    room.camera.DrawLine(point + perp, target.transform.position, 2f, color1, Layers.Under3);
+                    room.camera.DrawLine(point - perp, target.transform.position, 2f, color1, Layers.Under3);
                 }
             }
 

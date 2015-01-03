@@ -498,7 +498,7 @@ namespace OrbItProcs {
         // gets the index of the node in the gridsystem, without correcting out of bounds nodes.
         public Tuple<int, int> getIndexsNew(Collider collider)
         {
-            //int a = (int)node.body.pos.x / cellWidth;
+            //int a = (int)node.transform.position.x / cellWidth;
             return new Tuple<int, int>((int)collider.pos.x / cellWidth, (int)collider.pos.y / cellHeight);
         }
 

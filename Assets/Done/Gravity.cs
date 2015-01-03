@@ -128,7 +128,7 @@ namespace OrbItProcs {
 
             if (AffectsOnlyGravity && !other.HasComp<Gravity>()) return;
 
-            float distVects = Vector2.Distance(other.body.pos, parent.body.pos);
+            float distVects = Vector2.Distance(other.transform.position, parent.transform.position);
             Node affector = parent;
             Node affected = other;
             if (affectDirection == AffectDirection.OthersAffectThis)
@@ -142,7 +142,7 @@ namespace OrbItProcs {
                 //distVects = (float)Math.Sqrt(distVects);
                 if (deadZone.enabled && distVects < deadZone.value) return;
                 if (distVects < lowerbound) distVects = lowerbound;
-                double angletemp = Math.Atan2((affector.body.pos.y - affected.body.pos.y), (affector.body.pos.x - affected.body.pos.x));
+                double angletemp = Math.Atan2((affector.transform.position.y - affected.transform.position.y), (affector.transform.position.x - affected.transform.position.x));
 
                 float gravForce = (multiplier * affector.body.mass * affected.body.mass);
 
@@ -178,8 +178,8 @@ namespace OrbItProcs {
                 if (affectDirection == AffectDirection.Both)
                 {
                     delta /= 2;
-                    affected.body.velocity += delta * other.body.invmass;
-                    affector.body.velocity -= delta * parent.body.invmass;
+                    affected.rigidbody.velocity += delta * other.body.invmass;
+                    affector.rigidbody.velocity -= delta * parent.body.invmass;
                 }
                 else
                 {
@@ -188,10 +188,10 @@ namespace OrbItProcs {
 
                 if (ShowForceLines)
                 {
-                    room.camera.DrawLine(other.body.pos, other.body.pos + (delta * 100), 2, parent.body.color, Layers.Over4);
+                    room.camera.DrawLine(other.transform.position, other.transform.position + (delta * 100), 2, parent.body.color, Layers.Over4);
                 }
-                //other.body.velocity += delta;
-                //other.body.velocity /= other.body.mass; //creates snakelike effect when put below increments
+                //other.rigidbody.velocity += delta;
+                //other.rigidbody.velocity /= other.body.mass; //creates snakelike effect when put below increments
             }
         }
 
@@ -236,8 +236,8 @@ namespace OrbItProcs {
         }
         public void DrawCircle()
         {
-            room.camera.Draw(textures.ring, parent.body.pos, parent.body.color * 0.2f, drawscale / 50f, Layers.Under2);
-            room.camera.AddPermanentDraw(textures.ring, parent.body.pos, parent.body.color * 0.2f, drawscale / 50f, 0, 50);
+            room.camera.Draw(textures.ring, parent.transform.position, parent.body.color * 0.2f, drawscale / 50f, Layers.Under2);
+            room.camera.AddPermanentDraw(textures.ring, parent.transform.position, parent.body.color * 0.2f, drawscale / 50f, 0, 50);
         }
     }
 }

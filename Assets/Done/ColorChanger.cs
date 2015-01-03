@@ -159,14 +159,14 @@ namespace OrbItProcs
             }
             else if (colormode == ColorMode.position)
             {
-                float r = parent.body.pos.x / (float)room.worldWidth;
-                float g = parent.body.pos.y / (float)room.worldHeight;
-                float b = (parent.body.pos.x / parent.body.pos.y) / ((float)room.worldWidth / (float)room.worldHeight);
+                float r = parent.transform.position.x / (float)room.worldWidth;
+                float g = parent.transform.position.y / (float)room.worldHeight;
+                float b = (parent.transform.position.x / parent.transform.position.y) / ((float)room.worldWidth / (float)room.worldHeight);
                 parent.body.color = new Color(r, g, b);
             }
             else if (colormode == ColorMode.velocity)
             {
-                float len = Vector2.Distance(parent.body.velocity, Vector2.zero) / 25;
+                float len = Vector2.Distance(parent.rigidbody.velocity, Vector2.zero) / 25;
                 parent.body.color = new Color((parent.body.permaColor.r.ToXNAColor() / 255f) * len, (parent.body.permaColor.g.ToXNAColor() / 255f) * len, (parent.body.permaColor.b.ToXNAColor() / 255f) * len);
                 //parent.body.color = getColorFromHSV((float)Math.Min(1.0, len / 20) * 360f, (float)Math.Min(1.0, len / 20), (float)Math.Min(1.0, len / 20));
             }
