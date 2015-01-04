@@ -123,12 +123,9 @@ namespace OrbItProcs {
         {
             if (!active) { return; }
             if (exclusions.Contains(other)) return;
-
-            //if (EveryOther && counter++ % 2 == 0) return;
-
             if (AffectsOnlyGravity && !other.HasComp<Gravity>()) return;
 
-            float distVects = Vector2.Distance(other.transform.position, parent.transform.position);
+            float distVects = Vector3.Distance(other.transform.position, parent.transform.position);
             Node affector = parent;
             Node affected = other;
             if (affectDirection == AffectDirection.OthersAffectThis)
@@ -142,9 +139,10 @@ namespace OrbItProcs {
                 //distVects = (float)Math.Sqrt(distVects);
                 if (deadZone.enabled && distVects < deadZone.value) return;
                 if (distVects < lowerbound) distVects = lowerbound;
-                double angletemp = Math.Atan2((affector.transform.position.y - affected.transform.position.y), (affector.transform.position.x - affected.transform.position.x));
+                //fix to make 3d rotation
+                //double angletemp = Math.Atan2((affector.transform.position.y - affected.transform.position.y), (affector.transform.position.x - affected.transform.position.x));
 
-                float gravForce = (multiplier * affector.body.mass * affected.body.mass);
+                float gravForce = (multiplier * affector.rigidbody.mass * affected.rigidbody.mass);
 
                 switch (mode)
                 {
@@ -160,15 +158,17 @@ namespace OrbItProcs {
                 }
                 if (Repulsive) gravForce *= -1;
 
-                if (angle != 0)
-                {
-                    angletemp = (angletemp + Math.PI + (Math.PI * (float)(angle / 180.0f)) % (Math.PI * 2)) - Math.PI; //test for validity
-                }
+                //if (angle != 0)
+                //{
+                //    angletemp = (angletemp + Math.PI + (Math.PI * (float)(angle / 180.0f)) % (Math.PI * 2)) - Math.PI; //test for validity
+                //}
 
                 //float gravForce = gnode1.GravMultiplier;
-                float velX = (float)Math.Cos(angletemp) * gravForce;
-                float velY = (float)Math.Sin(angletemp) * gravForce;
-                Vector2 delta = new Vector2(velX, velY);
+                //float velX = (float)Math.Cos(angletemp) * gravForce;
+                //float velY = (float)Math.Sin(angletemp) * gravForce;
+
+                //Vector2 delta = new Vector2(velX, velY);
+                Vector3 delta = (affector.transform.position - affected.transform.position).normalized * gravForce;
                 
                 /*
                 delta /= other.transform.mass;
@@ -178,18 +178,19 @@ namespace OrbItProcs {
                 if (affectDirection == AffectDirection.Both)
                 {
                     delta /= 2;
-                    affected.rigidbody.velocity += delta * other.body.invmass;
-                    affector.rigidbody.velocity -= delta * parent.body.invmass;
+                    affected.rigidbody.velocity = affected.rigidbody.velocity + delta / other.rigidbody.mass;
+                    affector.rigidbody.velocity = affected.rigidbody.velocity - delta / parent.rigidbody.mass;
                 }
                 else
                 {
-                    affected.body.ApplyForce(delta);
+                    affected.rigidbody.AddForce(delta);
                 }
 
-                if (ShowForceLines)
-                {
-                    room.camera.DrawLine(other.transform.position, other.transform.position + (delta * 100), 2, parent.body.color, Layers.Over4);
-                }
+                //if (ShowForceLines)
+                //{
+                //    room.camera.DrawLine(other.transform.position, other.transform.position + (delta * 100), 2, parent.body.color, Layers.Over4);
+                //}
+
                 //other.rigidbody.velocity += delta;
                 //other.rigidbody.velocity /= other.body.mass; //creates snakelike effect when put below increments
             }
@@ -197,47 +198,47 @@ namespace OrbItProcs {
 
         public override void Draw()
         {
-            if (!ShowRings) return;
-            float deadzone = 5f;
-            if (!Repulsive)
-            {
-                if (multiplier > deadzone)
-                {
-                    DrawOutwards();
-                }
-                else if (multiplier < -deadzone)
-                {
-                    DrawInwards();
-                }
-            }
-            else
-            {
-                if (multiplier > -deadzone)
-                {
-                    DrawInwards();
-                }
-                else if (multiplier < deadzone)
-                {
-                    DrawOutwards();
-                }
-            }
+            //if (!ShowRings) return;
+            //float deadzone = 5f;
+            //if (!Repulsive)
+            //{
+            //    if (multiplier > deadzone)
+            //    {
+            //        DrawOutwards();
+            //    }
+            //    else if (multiplier < -deadzone)
+            //    {
+            //        DrawInwards();
+            //    }
+            //}
+            //else
+            //{
+            //    if (multiplier > -deadzone)
+            //    {
+            //        DrawInwards();
+            //    }
+            //    else if (multiplier < deadzone)
+            //    {
+            //        DrawOutwards();
+            //    }
+            //}
         }
         public void DrawOutwards()
         {
-            DrawCircle();
-            drawscale -= 2f;
-            if (drawscale < 10) drawscale = radius / 10;
+            //DrawCircle();
+            //drawscale -= 2f;
+            //if (drawscale < 10) drawscale = radius / 10;
         }
         public void DrawInwards()
         {
-            DrawCircle();
-            drawscale += 2f;
-            if (drawscale > radius / 10) drawscale = 5f;
+            //DrawCircle();
+            //drawscale += 2f;
+            //if (drawscale > radius / 10) drawscale = 5f;
         }
         public void DrawCircle()
         {
-            room.camera.Draw(textures.ring, parent.transform.position, parent.body.color * 0.2f, drawscale / 50f, Layers.Under2);
-            room.camera.AddPermanentDraw(textures.ring, parent.transform.position, parent.body.color * 0.2f, drawscale / 50f, 0, 50);
+            //room.camera.Draw(textures.ring, parent.transform.position, parent.material.color * 0.2f, drawscale / 50f, Layers.Under2);
+            //room.camera.AddPermanentDraw(textures.ring, parent.transform.position, parent.material.color * 0.2f, drawscale / 50f, 0, 50);
         }
     }
 }

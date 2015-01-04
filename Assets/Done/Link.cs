@@ -524,7 +524,7 @@ namespace OrbItProcs
                     Color color1 = Color.white;
                     if (sourceNode != null && sourceNode.IsPlayer)
                     {
-                        color1 = sourceNode.body.color;
+                        color1 = sourceNode.material.color;
                     }
 
                     Vector2 diff = target.transform.position - source.transform.position;
@@ -537,14 +537,14 @@ namespace OrbItProcs
                     //Utils.DrawLine(spritebatch, source.transform.position + perp, target.transform.position + perp, 2f, col, room);
                     //Utils.DrawLine(spritebatch, source.transform.position - perp, target.transform.position - perp, 2f, col, room);
 
-                    if (!DrawTips) continue;
-                    perp *= 20;
-
-                    Vector2 center = (target.transform.position + source.transform.position) / 2;
-
-                    Vector2 point = target.transform.position - (diff / 5);
-                    room.camera.DrawLine(point + perp, target.transform.position, 2f, color1, Layers.Under3);
-                    room.camera.DrawLine(point - perp, target.transform.position, 2f, color1, Layers.Under3);
+                    //if (!DrawTips) continue;
+                    //perp *= 20;
+                    //
+                    //Vector2 center = (target.transform.position + source.transform.position) / 2;
+                    //
+                    //Vector2 point = target.transform.position - (diff / 5);
+                    //room.camera.DrawLine(point + perp, target.transform.position, 2f, color1, Layers.Under3);
+                    //room.camera.DrawLine(point - perp, target.transform.position, 2f, color1, Layers.Under3);
                 }
             }
 

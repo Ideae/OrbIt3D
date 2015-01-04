@@ -91,8 +91,8 @@ namespace OrbItProcs
         public virtual void SetupSprites() { }
         public virtual void InitializeLists() { }
 
-        private DrawControl _draw;
-        public DrawControl draw { get { return _draw; } set { _draw = value; } }
+        //private DrawControl _draw;
+        //public DrawControl draw { get { return _draw; } set { _draw = value; } }
         public bool IsItem()
         {
             return (compType & mtypes.item) == mtypes.item;
@@ -110,10 +110,10 @@ namespace OrbItProcs
 
         public Component()
         {
-            if ((compType & mtypes.draw) == mtypes.draw)
-            {
-                draw = new DrawControl(this);
-            }
+            //if ((compType & mtypes.draw) == mtypes.draw)
+            //{
+            //    draw = new DrawControl(this);
+            //}
         }
         public static Component GenerateComponent(Type t, Node par)
         {

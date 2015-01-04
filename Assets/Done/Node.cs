@@ -275,7 +275,7 @@ namespace OrbItProcs {
         public Color permaColor;
 
         public Vector3 effvelocity = Vector3.zero;
-
+        public bool isSolid { get { return !collider.isTrigger; } set { collider.isTrigger = !value; } }
         //public Node(Room room) : this(room, ShapeType.Circle) { }
         public Node(Room room)//, ShapeType shapetype)
         {
@@ -841,11 +841,11 @@ namespace OrbItProcs {
             {
                 Component component = comps[key];
                 component.OnSpawn();
-                if ((component.compType & mtypes.draw) == mtypes.draw)
-                {
-                    component.draw = new DrawControl(component);
-                    component.SetupSprites();
-                }
+                //if ((component.compType & mtypes.draw) == mtypes.draw)
+                //{
+                //    component.draw = new DrawControl(component);
+                //    component.SetupSprites();
+                //}
             }
         }
 

@@ -204,7 +204,7 @@ namespace OrbItProcs
             }
             if (drawRing)
             {
-                float scale = (radius * 2f) / Assets.textureDict[textures.ring].texture.width;
+                float scale = (radius * 2f) / Assets.textureDict[textures.ring].width;
                 float alpha = (((float)Math.Sin(Time.timeSinceLevelLoad * 1000 / 300f) + 1f) / 4f) + 0.25f;
                 player.room.camera.Draw(textures.ring, player.node.transform.position, player.pColor * alpha, scale, Layers.Under2);
             }

@@ -51,7 +51,6 @@ namespace OrbItProcs
                 if (value != null)
                 {
                     value.group = this;
-                    value.collision.RemoveCollidersFromSet();
                 }
             } 
         }
@@ -76,8 +75,6 @@ namespace OrbItProcs
                         foreach (Node n in fullSet)
                         {
                             if (parentGroup.inherited.Contains(n)) parentGroup.inherited.Remove(n);
-                            if (room.collisionManager.CollisionSetCircle.Contains(n.body)) room.collisionManager.CollisionSetCircle.Remove(n.body);
-                            if (room.collisionManager.CollisionSetPolygon.Contains(n.body)) room.collisionManager.CollisionSetPolygon.Remove(n.body);
                         }
                         Spawnable = false;
                     }
@@ -89,7 +86,6 @@ namespace OrbItProcs
                         foreach (Node n in fullSet)
                         {
                             parentGroup.inherited.Add(n);
-                            n.collision.UpdateCollisionSet();
                         }
                         Spawnable = true;
                     }
@@ -212,11 +208,6 @@ namespace OrbItProcs
         {
             entities.Add(entity);
             entity.group = this;
-            if (entity.collision.active)
-            {
-                //room.CollisionSet.Add(entity);
-                entity.collision.UpdateCollisionSet();
-            }
             entity.gameobject.transform.parent = gameObject.transform;
 //             if (OrbIt.ui.sidebar.cbListPicker.Text.Equals(Name)) // if there is a crash in this line, we removed (room.game.IsOldUI && 
 //             {
@@ -229,7 +220,6 @@ namespace OrbItProcs
         //removes entity from current group and all child groups
         public void DiscludeEntity(Node entity)
         {
-            entity.collision.RemoveCollidersFromSet();
             entities.Remove(entity);
             if (inherited.Contains(entity))
                 inherited.Remove(entity);

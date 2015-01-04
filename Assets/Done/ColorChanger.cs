@@ -134,11 +134,11 @@ namespace OrbItProcs
                 //parent.body.color = Utils.IntToColor(Utils.CurrentMilliseconds());
                 float num = (float)Utils.random.Next(100000) / (float)100000;
                 int n = (int)(num * 16000000);
-                parent.body.color = Utils.IntToColor(n);
-                parent.body.permaColor = parent.body.color;
+                parent.renderer.material.color = Utils.IntToColor(n);
+                parent.permaColor = parent.renderer.material.color;
 
             }
-            hue = Utils.HueFromColor(parent.body.permaColor);
+            hue = Utils.HueFromColor(parent.permaColor);
             permaHue = hue;
         }
         private void managedUpdate(Node n)
@@ -154,20 +154,20 @@ namespace OrbItProcs
             bool black, white;
             if (colormode == ColorMode.angle)
             {
-                float angle = (float)((Math.Atan2(parent.body.effvelocity.y, parent.body.effvelocity.x) + Math.PI) * (180 / Math.PI));
-                parent.body.color = getColorFromHSV(angle, saturation, value);
+                float angle = (float)((Math.Atan2(parent.effvelocity.y, parent.effvelocity.x) + Math.PI) * (180 / Math.PI));
+                parent.material.color = getColorFromHSV(angle, saturation, value);
             }
             else if (colormode == ColorMode.position)
             {
-                float r = parent.transform.position.x / (float)room.worldWidth;
-                float g = parent.transform.position.y / (float)room.worldHeight;
-                float b = (parent.transform.position.x / parent.transform.position.y) / ((float)room.worldWidth / (float)room.worldHeight);
-                parent.body.color = new Color(r, g, b);
+                float r = parent.transform.position.x / (float)room.worldSize.x;
+                float g = parent.transform.position.y / (float)room.worldSize.y;
+                float b = (parent.transform.position.x / parent.transform.position.y) / ((float)room.worldSize.x / (float)room.worldSize.y);
+                parent.material.color = new Color(r, g, b);
             }
             else if (colormode == ColorMode.velocity)
             {
                 float len = Vector2.Distance(parent.rigidbody.velocity, Vector2.zero) / 25;
-                parent.body.color = new Color((parent.body.permaColor.r.ToXNAColor() / 255f) * len, (parent.body.permaColor.g.ToXNAColor() / 255f) * len, (parent.body.permaColor.b.ToXNAColor() / 255f) * len);
+                parent.material.color = new Color((parent.permaColor.r.ToXNAColor() / 255f) * len, (parent.permaColor.g.ToXNAColor() / 255f) * len, (parent.permaColor.b.ToXNAColor() / 255f) * len);
                 //parent.body.color = getColorFromHSV((float)Math.Min(1.0, len / 20) * 360f, (float)Math.Min(1.0, len / 20), (float)Math.Min(1.0, len / 20));
             }
             else if (colormode == ColorMode.hueShifter)
@@ -178,12 +178,12 @@ namespace OrbItProcs
                 {
                     tempinc /= 2f;
                 }
-                parent.body.color = getColorFromHSV(hue, saturation, value);
+                parent.material.color = getColorFromHSV(hue, saturation, value);
                 hue = (hue + tempinc) % 360;
             }
             else if ((black = colormode == ColorMode.phaseBlack) || (white = colormode == ColorMode.phaseWhite))
             {
-                Color c = parent.body.permaColor;
+                Color c = parent.permaColor;
                 Vector3 perma = new Vector3(c.r.ToXNAColor(), c.g.ToXNAColor(), c.b.ToXNAColor());
                 Vector3 dest = Vector3.zero;
                 if (black)
@@ -206,11 +206,11 @@ namespace OrbItProcs
                     currentLerpPos = 0;
                     lerpSign *= -1;
                 }
-                parent.body.color = Vector3.Lerp(perma, dest, currentLerpPos).ToColor(parent.body.color.a);
+                parent.material.color = Vector3.Lerp(perma, dest, currentLerpPos).ToColor(parent.material.color.a);
             }
             else if (colormode == ColorMode.phaseAround)
             {
-                Color c = parent.body.permaColor;
+                Color c = parent.permaColor;
                 Vector3 perma = new Vector3(c.r.ToXNAColor(), c.g.ToXNAColor(), c.b.ToXNAColor());
                 Vector3 down = Vector3.zero;
                 Vector3 up = Vector3.one;
@@ -227,7 +227,7 @@ namespace OrbItProcs
                     currentLerpPos = 0;
                     lerpSign *= -1;
                 }
-                parent.body.color = Vector3.Lerp(down, up, currentLerpPos).ToColor(parent.body.color.a);
+                parent.material.color = Vector3.Lerp(down, up, currentLerpPos).ToColor(parent.material.color.a);
             }
             else if (colormode == ColorMode.phaseHue)
             {
@@ -247,7 +247,7 @@ namespace OrbItProcs
                     huesign *= -1;
                 }
                 //Console.WriteLine(dist + "  " + huesign);
-                parent.body.color = getColorFromHSV(hue, saturation, value);
+                parent.material.color = getColorFromHSV(hue, saturation, value);
             }
         }
 

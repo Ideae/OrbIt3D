@@ -22,7 +22,7 @@ namespace OrbItProcs
         [Info(UserLevel.User, "When enabled, draws the ring circle around the node while collision is active.")]
         public bool DrawRing { get; set; }
 
-        public bool isSolid { get { return parent != null && parent.body.isSolid; } set { if (parent != null) parent.body.isSolid = value; } }
+        public bool isSolid { get { return parent != null && !parent.collider.isTrigger; } set { if (parent != null) parent.collider.isTrigger = !value; } }
         
         private bool _AllHandlersEnabled = true;
         [Info(UserLevel.Developer)]

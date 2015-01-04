@@ -163,54 +163,54 @@ namespace OrbItProcs
 
         public override void SetupSprites()
         {
-            if (parent.IsPlayer)
-            {
-                draw.addSprite("Pointer").SetLayer(Layers.Over4).SetTexture(textures.pointer);
-                draw.addSprite("A").SetColor(Color.green).SetLayer(Layers.Under2).SetScale(1.7f);
-                draw.addSprite("B").SetColor(Color.red).SetLayer(Layers.Under2).SetScale(1.7f);
-                draw.addSprite("X").SetColor(Color.blue).SetLayer(Layers.Under2).SetScale(1.7f);
-                draw.addSprite("Y").SetColor(Color.yellow).SetLayer(Layers.Under2).SetScale(1.7f);
-            }
+            //if (parent.IsPlayer)
+            //{
+            //    draw.addSprite("Pointer").SetLayer(Layers.Over4).SetTexture(textures.pointer);
+            //    draw.addSprite("A").SetColor(Color.green).SetLayer(Layers.Under2).SetScale(1.7f);
+            //    draw.addSprite("B").SetColor(Color.red).SetLayer(Layers.Under2).SetScale(1.7f);
+            //    draw.addSprite("X").SetColor(Color.blue).SetLayer(Layers.Under2).SetScale(1.7f);
+            //    draw.addSprite("Y").SetColor(Color.yellow).SetLayer(Layers.Under2).SetScale(1.7f);
+            //}
         }
 
         public override void Draw()
         {
-            if (healthBar == HealthBarMode.Bar) {
-                float healthRatio = (float)currentHealth / (float)maxHealth;
-                drawBar(parent, 1, healthRatio, rotateHealthBar, Color.cyan, Color.green, Color.yellow, Color.red);
-
-            }
-            if (parent.IsPlayer)
-            {
-                Color Q;
-                switch (parent.player.currentItem)
-                {
-                    case ItemSlots.A_Green: Q = Color.green; break;
-                    case ItemSlots.B_Red: Q = Color.red; break;
-                    case ItemSlots.X_Blue: Q = Color.blue; break;
-                    case ItemSlots.Y_Yellow: Q = Color.yellow; break;
-                    default: Q = Color.black; break;
-                }
-                //room.camera.Draw(textures.pointer, parent.transform.position, Q, parent.body.scale, parent.body.orient, Layers.Over4);
-                draw.getSprite("Pointer").SetColor(Q);
-                ItemSlots itemSlots = parent.player.occupiedSlots;
-                textures A, B, X, Y;
-                A = (itemSlots & ItemSlots.A_Green) == ItemSlots.A_Green ? textures.itemLight : textures.itemWhisper;
-                B = (itemSlots & ItemSlots.B_Red) == ItemSlots.B_Red ? textures.itemLight : textures.itemWhisper;
-                X = (itemSlots & ItemSlots.X_Blue) == ItemSlots.X_Blue ? textures.itemLight : textures.itemWhisper;
-                Y = (itemSlots & ItemSlots.Y_Yellow) == ItemSlots.Y_Yellow ? textures.itemLight : textures.itemWhisper;
-
-                //room.camera.Draw(A, parent.transform.position, Color.green, parent.body.scale * 1.7f, lightRotation, Layers.Under2);
-                //room.camera.Draw(B, parent.transform.position, Color.red, parent.body.scale * 1.7f, lightRotation + GMath.PIbyTwo, Layers.Under2);
-                //room.camera.Draw(X, parent.transform.position, Color.blue, parent.body.scale * 1.7f, lightRotation + GMath.PI, Layers.Under2);
-                //room.camera.Draw(Y, parent.transform.position, Color.yellow, parent.body.scale * 1.7f, lightRotation + GMath.PI + GMath.PIbyTwo, Layers.Under2);
-                draw.getSprite("A").SetTexture(A).SetRotation(lightRotation);
-                draw.getSprite("B").SetTexture(B).SetRotation(lightRotation + GMath.PIbyTwo);
-                draw.getSprite("X").SetTexture(X).SetRotation(lightRotation + GMath.PI);
-                draw.getSprite("Y").SetTexture(Y).SetRotation(lightRotation + GMath.PI + GMath.PIbyTwo);
-                
-                lightRotation += 0.1f;
-            }
+            //if (healthBar == HealthBarMode.Bar) {
+            //    float healthRatio = (float)currentHealth / (float)maxHealth;
+            //    drawBar(parent, 1, healthRatio, rotateHealthBar, Color.cyan, Color.green, Color.yellow, Color.red);
+            //
+            //}
+            //if (parent.IsPlayer)
+            //{
+            //    Color Q;
+            //    switch (parent.player.currentItem)
+            //    {
+            //        case ItemSlots.A_Green: Q = Color.green; break;
+            //        case ItemSlots.B_Red: Q = Color.red; break;
+            //        case ItemSlots.X_Blue: Q = Color.blue; break;
+            //        case ItemSlots.Y_Yellow: Q = Color.yellow; break;
+            //        default: Q = Color.black; break;
+            //    }
+            //    //room.camera.Draw(textures.pointer, parent.transform.position, Q, parent.body.scale, parent.body.orient, Layers.Over4);
+            //    draw.getSprite("Pointer").SetColor(Q);
+            //    ItemSlots itemSlots = parent.player.occupiedSlots;
+            //    textures A, B, X, Y;
+            //    A = (itemSlots & ItemSlots.A_Green) == ItemSlots.A_Green ? textures.itemLight : textures.itemWhisper;
+            //    B = (itemSlots & ItemSlots.B_Red) == ItemSlots.B_Red ? textures.itemLight : textures.itemWhisper;
+            //    X = (itemSlots & ItemSlots.X_Blue) == ItemSlots.X_Blue ? textures.itemLight : textures.itemWhisper;
+            //    Y = (itemSlots & ItemSlots.Y_Yellow) == ItemSlots.Y_Yellow ? textures.itemLight : textures.itemWhisper;
+            //
+            //    //room.camera.Draw(A, parent.transform.position, Color.green, parent.body.scale * 1.7f, lightRotation, Layers.Under2);
+            //    //room.camera.Draw(B, parent.transform.position, Color.red, parent.body.scale * 1.7f, lightRotation + GMath.PIbyTwo, Layers.Under2);
+            //    //room.camera.Draw(X, parent.transform.position, Color.blue, parent.body.scale * 1.7f, lightRotation + GMath.PI, Layers.Under2);
+            //    //room.camera.Draw(Y, parent.transform.position, Color.yellow, parent.body.scale * 1.7f, lightRotation + GMath.PI + GMath.PIbyTwo, Layers.Under2);
+            //    draw.getSprite("A").SetTexture(A).SetRotation(lightRotation);
+            //    draw.getSprite("B").SetTexture(B).SetRotation(lightRotation + GMath.PIbyTwo);
+            //    draw.getSprite("X").SetTexture(X).SetRotation(lightRotation + GMath.PI);
+            //    draw.getSprite("Y").SetTexture(Y).SetRotation(lightRotation + GMath.PI + GMath.PIbyTwo);
+            //    
+            //    lightRotation += 0.1f;
+            //}
 
         }
 

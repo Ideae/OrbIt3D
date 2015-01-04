@@ -20,6 +20,7 @@ public class OrbIt : MonoBehaviour {
     #region ///////////////////// PROPERTIES ///////////////////
     public static float Width { get; set; }
     public static float Height { get; set; }
+    public static float Depth { get; set; }
     public static Vector2 origin { get; set; }
     
 
@@ -38,6 +39,7 @@ public class OrbIt : MonoBehaviour {
         origin = new Vector2(roomIndicator.position.x, roomIndicator.position.y);
         Width = roomIndicator.GetComponent<RoomDimensions>().width;
         Height = roomIndicator.GetComponent<RoomDimensions>().height;
+        Depth = roomIndicator.GetComponent<RoomDimensions>().depth;
 
     }
 
@@ -47,7 +49,7 @@ public class OrbIt : MonoBehaviour {
 #if UNITY_EDITOR
         if (!Application.isPlaying) return; //or whatever script needs to be run when in edition mode.
 #endif
-        room = new Room(this, (int)Width, (int)Height);
+        room = new Room(this, new Vector3(Width, Height, Depth));
         keyManager = new KeyManager();
 
         globalGameMode = new GameMode(this);

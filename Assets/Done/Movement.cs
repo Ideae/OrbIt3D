@@ -14,7 +14,6 @@ namespace OrbItProcs
         wallbounce,
         screenwrap,
         falloff,
-        halt,
     };
     /// <summary>
     /// Basic Movement Component
@@ -82,12 +81,14 @@ namespace OrbItProcs
 
             if (minVelocity.enabled && velSquared < minVelocity * minVelocity)
             {
-                VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                //VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                parent.rigidbody.velocity.Normalize();
                 parent.rigidbody.velocity *= minVelocity;
             }
             if (maxVelocity.enabled && velSquared > maxVelocity * maxVelocity)
             {
-                VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                //VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                parent.rigidbody.velocity.Normalize();
                 parent.rigidbody.velocity *= maxVelocity;
             }
         }
@@ -106,7 +107,8 @@ namespace OrbItProcs
         {
             if (parent.rigidbody.velocity.x != 0 && parent.rigidbody.velocity.y != 0)
             {
-                VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                //VMath.NormalizeSafe(ref parent.rigidbody.velocity);
+                parent.rigidbody.velocity.Normalize();
                 parent.rigidbody.velocity *= randInitialVel;
             }
         }
@@ -119,19 +121,18 @@ namespace OrbItProcs
             if (mode == movemode.screenwrap) screenWrap();
             if (mode == movemode.wallbounce) wallBounce();
             if (mode == movemode.falloff)    fallOff();
-            if (mode == movemode.halt) halt();
 
             //GraphData.AddFloat(parent.transform.position.x);
 
             //Trippy();
         }
 
-        public void Trippy()
-        {
-            //test (holy SHIT that looks cool)
-            PropertyInfo pi = parent.body.GetType().GetProperty("scale");
-            pi.SetValue(parent.body, parent.transform.position.x % 4.0f, null);
-        }
+        //public void Trippy()
+        //{
+        //    //test (holy SHIT that looks cool)
+        //    PropertyInfo pi = parent.body.GetType().GetProperty("scale");
+        //    pi.SetValue(parent.body, parent.transform.position.x % 4.0f, null);
+        //}
         public float absaccel = 0.2f;
         public float friction = 0.01f;
         private float v = 0.0f;
@@ -153,27 +154,27 @@ namespace OrbItProcs
                 v = VMath.VectorToAngle(stick).between0and2pi();
                 if (v == 0f) v = 0.00001f;
             }
-            float result = GMath.AngleLerp(parent.body.orient, v, 0.1f);
+            float result = GMath.AngleLerp(parent.transform.eulerAngles.x, v, 0.1f);
 
-            parent.body.orient =(result);
+            parent.transform.eulerAngles.SetX(result);
 
             stick *= 0.4f;
             stick *= absaccel;
             if ((parent.rigidbody.velocity.x != 0 || parent.rigidbody.velocity.y != 0))
             {
-                stick += parent.rigidbody.velocity * -friction;
+                stick += (Vector2)parent.rigidbody.velocity * -friction;
             }
-            stick *= parent.body.mass;
+            stick *= parent.rigidbody.mass;
             //todo: update maxvel?
-            parent.body.ApplyForce(stick);
+            parent.rigidbody.AddForce(stick);
 
 
         }
         //reminder: make a vocal recognition extension for visual studio to take you where you want ("Class: Movement. Method: fallOff.")
         public void fallOff()
         {
-            int levelwidth = room.worldWidth;
-            int levelheight = room.worldHeight;
+            float levelwidth = room.worldSize.x;
+            float levelheight = room.worldSize.y;
 
             Vector2 pos = parent.transform.position;
 
@@ -207,8 +208,8 @@ namespace OrbItProcs
         {
             //if (room.PropertiesDict["wallBounce"])
             //float levelwidth = room.game...;
-            int levelwidth = room.worldWidth;
-            int levelheight = room.worldHeight;
+            float levelwidth = room.worldSize.x;
+            float levelheight = room.worldSize.y;
             float halfwidth = levelwidth / 2f;
             float halfheight = levelheight / 2f;
 
@@ -221,9 +222,9 @@ namespace OrbItProcs
             {
                 //float off = parent.transform.position.x - (levelwidth - parent.radius);
                 //parent.transform.position.x = (levelwidth - parent.radius - off) % room.worldWidth;
-                parent.transform.position.x = GMath.Triangle(parent.transform.position.x, maxX - (int)parent.radius);
+                parent.transform.position.SetX(GMath.Triangle(parent.transform.position.x, maxX - (int)parent.radius));
                 if (parent.rigidbody.velocity.x > 0)
-                    parent.rigidbody.velocity.x *= -1;
+                    parent.rigidbody.velocity.SetX(parent.rigidbody.velocity.x * -1);
                 //parent.body.InvokeOnCollisionStay(null); //todo: find out why we needed null, fix this
 
             }
@@ -231,85 +232,48 @@ namespace OrbItProcs
             {
                 //float off = parent.radius - parent.transform.position.x;
                 //parent.transform.position.x = (parent.radius + off) % room.worldWidth;
-                parent.transform.position.x = GMath.Triangle(parent.transform.position.x - parent.radius + halfwidth, room.worldWidth) + parent.radius - halfwidth;
+                parent.transform.position.SetX(GMath.Triangle(parent.transform.position.x - parent.radius + halfwidth, room.worldSize.x) + parent.radius - halfwidth);
                 if (parent.rigidbody.velocity.x < 0)
-                    parent.rigidbody.velocity.x *= -1;
+                    parent.rigidbody.velocity.SetX(parent.rigidbody.velocity.x * -1);
                 //parent.body.InvokeOnCollisionStay(null);
             }
             if (parent.transform.position.y >= (maxY - parent.radius))
             {
                 //float off = parent.transform.position.y - (levelheight - parent.radius);
                 //parent.transform.position.y = (levelheight - parent.radius - off) % room.worldHeight;
-                parent.transform.position.y = GMath.Triangle(parent.transform.position.y, maxY - (int)parent.radius);
+                parent.transform.position.SetY(GMath.Triangle(parent.transform.position.y, maxY - (int)parent.radius));
                 if (parent.rigidbody.velocity.y > 0)
-                    parent.rigidbody.velocity.y *= -1;
+                    parent.rigidbody.velocity.SetY(parent.rigidbody.velocity.y * -1);
                 //parent.body.InvokeOnCollisionStay(null);
             }
             if (parent.transform.position.y < minY + parent.radius)
             {
                 //float off = parent.radius - parent.transform.position.y;
                 //parent.transform.position.y = (parent.radius + off) % room.worldHeight;
-                parent.transform.position.y = GMath.Triangle(parent.transform.position.y - parent.radius + halfheight, room.worldHeight) + parent.radius - halfheight;
+                parent.transform.position.SetY(GMath.Triangle(parent.transform.position.y - parent.radius + halfheight, room.worldSize.y) + parent.radius - halfheight);
                 if (parent.rigidbody.velocity.y < 0)
-                    parent.rigidbody.velocity.y *= -1;
+                    parent.rigidbody.velocity.SetY(parent.rigidbody.velocity.y * -1);
                 //parent.body.InvokeOnCollisionStay(null);
             }
         }
 
-        public void halt()
-        {
-            //if (room.PropertiesDict["wallBounce"])
-            //float levelwidth = room.game...;
-            int levelwidth = room.worldWidth;
-            int levelheight = room.worldHeight;
-
-            if (parent.transform.position.x >= (levelwidth - parent.radius))
-            {
-                parent.transform.position.x = levelwidth - parent.radius;
-                parent.rigidbody.velocity.x *= 0;
-                parent.body.InvokeOnCollisionStay(null);
-
-            }
-            if (parent.transform.position.x < parent.radius)
-            {
-                parent.transform.position.x = parent.radius;
-                parent.rigidbody.velocity.x *= 0;
-                parent.body.InvokeOnCollisionStay(null);
-            }
-            if (parent.transform.position.y >= (levelheight - parent.radius))
-            {
-                parent.transform.position.y = levelheight - parent.radius;
-                parent.rigidbody.velocity.y *= 0;
-                parent.body.InvokeOnCollisionStay(null);
-            }
-            if (parent.transform.position.y < parent.radius)
-            {
-                parent.transform.position.y = parent.radius;
-                parent.rigidbody.velocity.y *= 0;
-                parent.body.InvokeOnCollisionStay(null);
-            }
-
-
-        }
-
-        
         public void screenWrap()
         {
             //if (room.PropertiesDict["wallBounce"])
             //float levelwidth = room.game...;
-            int levelwidth = room.worldWidth;
-            int levelheight = room.worldHeight;
+            float levelwidth = room.worldSize.x;
+            float levelheight = room.worldSize.y;
 
             //todo: modulus screen width
             //hitting top/bottom of screen
             //teleport node
             if (parent.transform.position.x >= levelwidth)
             {
-                parent.transform.position.x = parent.transform.position.x - levelwidth;//1;
+                parent.transform.position.SetX(parent.transform.position.x - levelwidth);//1;
             }
             else if (parent.transform.position.x < 0)
             {
-                parent.transform.position.x = levelwidth - parent.transform.position.x;//1;
+                parent.transform.position.SetX(levelwidth - parent.transform.position.x);//1;
             }
             //show half texture on other side
             if (parent.transform.position.x >= (levelwidth - parent.radius))
@@ -325,11 +289,11 @@ namespace OrbItProcs
             //teleport node
             if (parent.transform.position.y >= levelheight)
             {
-                parent.transform.position.y = parent.transform.position.y - levelheight;//1;
+                parent.transform.position.SetY(parent.transform.position.y - levelheight);//1;
             }
             else if (parent.transform.position.y < 0)
             {
-                parent.transform.position.y = levelheight - parent.transform.position.y;//1;
+                parent.transform.position.SetY(levelheight - parent.transform.position.y);//1;
             }
             //show half texture on other side
             if (parent.transform.position.y >= (levelheight - parent.radius))

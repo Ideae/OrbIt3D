@@ -67,7 +67,6 @@
     <Compile Include="Assets\Done\Framerate.cs" />
     <Compile Include="Assets\Done\GameMode.cs" />
     <Compile Include="Assets\Done\Gravity.cs" />
-    <Compile Include="Assets\Done\GridSystem.cs" />
     <Compile Include="Assets\Done\Group.cs" />
     <Compile Include="Assets\Done\GroupSelect.cs" />
     <Compile Include="Assets\Done\ILinkable.cs" />
@@ -92,7 +91,6 @@
     <Compile Include="Assets\Done\Runer.cs" />
     <Compile Include="Assets\Done\Scheduler.cs" />
     <Compile Include="Assets\Done\SpawnNodes.cs" />
-    <Compile Include="Assets\Done\ThreadedCamera.cs" />
     <Compile Include="Assets\Done\Toggle.cs" />
     <Compile Include="Assets\Done\Tuple.cs" />
     <Compile Include="Assets\Done\Utils.cs" />

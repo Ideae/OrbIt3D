@@ -261,9 +261,29 @@ namespace OrbItProcs
                 v.y *= invLen;
             }
         }
-        //public static Vector2 ToVector2(this Point point)
-        //{
-        //    return new Vector2(point.x, point.y);
-        //}
+        public static Vector3 NormalizeSafe(this Vector3 v)
+        {
+            if (v.x == 0 && v.y == 0 && v.z == 0) return v;
+            float len = v.magnitude;
+            if (len == 0) return v;
+            float invLen = 1.0f / len;
+            v.x *= invLen;
+            v.y *= invLen;
+            v.z *= invLen;
+            return v;
+        }
+
+        public static void NormalizeSafe(ref Vector3 v)
+        {
+            if (v.x != 0 || v.y != 0 && v.z == 0)
+            {
+                float len = v.magnitude;
+                if (len == 0) return;
+                float invLen = 1.0f / len;
+                v.x *= invLen;
+                v.y *= invLen;
+                v.z *= invLen;
+            }
+        }
     }
 }

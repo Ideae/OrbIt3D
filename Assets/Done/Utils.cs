@@ -401,7 +401,7 @@ namespace OrbItProcs {
                         target.SetData("infected", true);
                     }
                 };
-                newNode.body.OnCollisionStay += evil;
+                //newNode.body.OnCollisionStay += evil;
             }
         }
 

@@ -149,8 +149,7 @@ namespace OrbItProcs
 
         public override void OnSpawn()
         {
-            parent.collision.isSolid = false;
-            parent.body.OnCollisionEnter += OnCollision;
+            parent.isSolid = false;
 
             particlePacks = new List<ParticlePack>();
             for(int i = 0; i < packCount; i++)
@@ -174,7 +173,7 @@ namespace OrbItProcs
             {
                 foreach (var pack in particlePacks)
                 {
-                    pack.Draw(room, parent.transform.position, parent.body.color);
+                    pack.Draw(room, parent.transform.position, parent.material.color);
                 }
             }
             foreach (Component c in payloadNode.comps.Values)

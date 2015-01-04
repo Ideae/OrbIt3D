@@ -66,24 +66,24 @@ namespace OrbItProcs
         public override void SetupSprites()
         {
             Layers layer = parent.IsPlayer ? Layers.Player : DrawLayer;
-            draw.addSprite("sprite", parent.body.texture, layer).SetColor(parent.body.color);
+            //draw.addSprite("sprite", parent.body.texture, layer).SetColor(parent.body.color);
         }
         public void UpdateColor()
         {
             if (parent == null) return;
-            Color c = parent.body.color;
+            Color c = parent.renderer.material.color;
             Red = c.r;
             Green = c.g;
             Blue = c.b;
             
-            if (draw != null)
-            {
-                var sprite = draw.getSprite("sprite");
-                if (sprite != null)
-                {
-                    sprite.SetColor(c);
-                }
-            }
+            //if (draw != null)
+            //{
+            //    var sprite = draw.getSprite("sprite");
+            //    if (sprite != null)
+            //    {
+            //        sprite.SetColor(c);
+            //    }
+            //}
         }
 
         public override void OnSpawn()
@@ -114,8 +114,8 @@ namespace OrbItProcs
         {
             if (parent != null)
             {
-                parent.body.color = new Color(Red, Green, Blue);
-                parent.body.permaColor = parent.body.color;
+                parent.renderer.material.color = new Color(Red, Green, Blue);
+                parent.permaColor = parent.renderer.material.color;
             }
         }
         [Clickable]
@@ -123,8 +123,8 @@ namespace OrbItProcs
         {
             if (parent != null)
             {
-                parent.body.color = Utils.randomColor();
-                parent.body.permaColor = parent.body.color;
+                parent.renderer.material.color = Utils.randomColor();
+                parent.permaColor = parent.renderer.material.color;
             }
         }
         public void Deviate()
@@ -133,9 +133,9 @@ namespace OrbItProcs
             {
                 if (OrbIt.globalGameMode != null)
                 {
-                    parent.body.color = Color.Lerp(OrbIt.globalGameMode.globalColor, Utils.randomColor(), 0.1f);
-                    parent.body.permaColor = parent.body.color;
-                    OrbIt.globalGameMode.globalColor = parent.body.color;
+                    parent.renderer.material.color = Color.Lerp(OrbIt.globalGameMode.globalColor, Utils.randomColor(), 0.1f);
+                    parent.permaColor = parent.renderer.material.color;
+                    OrbIt.globalGameMode.globalColor = parent.renderer.material.color;
                 }
             }
             else SetColor();
@@ -146,12 +146,12 @@ namespace OrbItProcs
             if (parent != null)
             {
                 SetColor();
-                Color c = parent.body.permaColor;
+                Color c = parent.permaColor;
                 int r = Utils.random.Next(threshold) - (threshold / 2);
                 int g = Utils.random.Next(threshold) - (threshold / 2);
                 int b = Utils.random.Next(threshold) - (threshold / 2);
-                parent.body.color = new Color(c.r + r, c.g + g, c.b + b);
-                parent.body.permaColor = parent.body.color;
+                parent.renderer.material.color = new Color(c.r + r, c.g + g, c.b + b);
+                parent.permaColor = parent.renderer.material.color;
                 UpdateColor();
             }
         }
@@ -164,12 +164,8 @@ namespace OrbItProcs
             //    parent.body.shape.Draw();
             //    if (!parent.body.DrawPolygonCenter) return;
             //}
-
             
-            //room.camera.Draw(parent.body.texture, parent.transform.position, parent.body.color * (AlphaPercent / 100f), parent.body.scale, parent.body.orient, layer);
-            draw.getSprite("sprite").SetTexture(parent.body.texture).SetPosition(parent.transform.position).SetColor(parent.body.color * (AlphaPercent / 100f)).SetRotation(parent.body.orient);
-
-            //if(parent.body.texture == textures.boulder1 && DrawSparkles) room.camera.Draw(textures.boulderShine, parent.transform.position, Utils.randomColor(), parent.body.scale, parent.body.orient, layer);
+            //draw.getSprite("sprite").SetTexture(parent.texture).SetPosition(parent.transform.position).SetColor(parent.renderer.material.color * (AlphaPercent / 100f)).SetRotation(parent.body.orient);
         }
     }
 }

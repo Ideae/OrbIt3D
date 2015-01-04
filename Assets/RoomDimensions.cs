@@ -3,7 +3,7 @@ using System.Collections;
 [ExecuteInEditMode]
 public class RoomDimensions : MonoBehaviour {
 
-    public int width, height;
+    public int width, height, depth;
 	// Use this for initialization
 	void Start () {
 	
@@ -14,6 +14,7 @@ public class RoomDimensions : MonoBehaviour {
 	    transform.localScale = new Vector3(width, height, 0.01f) * 100; // 0.001?
         OrbIt.Width = width;
         OrbIt.Height = height;
+        OrbIt.Depth = depth;
         
 	}
 }
