@@ -1,0 +1,11 @@
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\obj\Debug\UnityVS.OrbIt3D.CSharp.csprojResolveAssemblyReference.cache
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\obj\Debug\Assembly-CSharp.dll
+C:\Users\zacktibia\Documents\GitHub\OrbIt3D\obj\Debug\Assembly-CSharp.pdb

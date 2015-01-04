@@ -532,7 +532,8 @@ namespace OrbItProcs
                     VMath.NormalizeSafe(ref perp);
                     perp *= 2;
 
-                    room.camera.DrawLine(source.transform.position, target.transform.position, 2f, color1, Layers.Under3);
+                    //room.camera.DrawLine(source.transform.position, target.transform.position, 2f, color1, Layers.Under3);
+
 
                     //Utils.DrawLine(spritebatch, source.transform.position + perp, target.transform.position + perp, 2f, col, room);
                     //Utils.DrawLine(spritebatch, source.transform.position - perp, target.transform.position - perp, 2f, col, room);
@@ -545,6 +546,8 @@ namespace OrbItProcs
                     //Vector2 point = target.transform.position - (diff / 5);
                     //room.camera.DrawLine(point + perp, target.transform.position, 2f, color1, Layers.Under3);
                     //room.camera.DrawLine(point - perp, target.transform.position, 2f, color1, Layers.Under3);
+
+
                 }
             }
 

@@ -96,7 +96,8 @@ namespace OrbItProcs
         {
             float x = ((float)Utils.random.NextDouble() * 100) - 50;
             float y = ((float)Utils.random.NextDouble() * 100) - 50;
-            Vector2 vel = new Vector2(x, y);
+            float z = ((float)Utils.random.NextDouble() * 100) - 50;
+            Vector3 vel = new Vector3(x, y, z);
             VMath.NormalizeSafe(ref vel);
             //vel.Normalize();
             vel = vel * randInitialVel;
@@ -118,9 +119,9 @@ namespace OrbItProcs
             //parent.body.position.x += parent.rigidbody.velocity.x * VelocityModifier;
             //parent.body.position.y += parent.rigidbody.velocity.y * VelocityModifier;
             //return;
-            if (mode == movemode.screenwrap) screenWrap();
             if (mode == movemode.wallbounce) wallBounce();
-            if (mode == movemode.falloff)    fallOff();
+            else if (mode == movemode.screenwrap) screenWrap();
+            else if (mode == movemode.falloff) fallOff();
 
             //GraphData.AddFloat(parent.transform.position.x);
 
@@ -208,15 +209,19 @@ namespace OrbItProcs
         {
             //if (room.PropertiesDict["wallBounce"])
             //float levelwidth = room.game...;
-            float levelwidth = room.worldSize.x;
-            float levelheight = room.worldSize.y;
+            float levelwidth = room.worldWidth;
+            float levelheight = room.worldHeight;
+            float leveldepth = room.worldDepth;
             float halfwidth = levelwidth / 2f;
             float halfheight = levelheight / 2f;
+            float halfdepth = leveldepth / 2f;
 
-            int maxX = (int)(OrbIt.origin.x + halfwidth);
-            int minX = (int)(OrbIt.origin.x - halfwidth);
-            int maxY = (int)(OrbIt.origin.y + halfheight);
-            int minY = (int)(OrbIt.origin.y - halfheight);
+            float maxX = (OrbIt.origin.x + halfwidth);
+            float minX = (OrbIt.origin.x - halfwidth);
+            float maxY = (OrbIt.origin.y + halfheight);
+            float minY = (OrbIt.origin.y - halfheight);
+            float maxZ = (OrbIt.origin.z + halfdepth);
+            float minZ = (OrbIt.origin.z - halfdepth);
 
             if (parent.transform.position.x >= (maxX - parent.radius))
             {
@@ -254,6 +259,18 @@ namespace OrbItProcs
                 if (parent.rigidbody.velocity.y < 0)
                     parent.rigidbody.velocity.SetY(parent.rigidbody.velocity.y * -1);
                 //parent.body.InvokeOnCollisionStay(null);
+            }
+            if (parent.transform.position.z >= (maxZ - parent.radius))
+            {
+                parent.transform.position.SetZ(GMath.Triangle(parent.transform.position.z, maxZ - (int)parent.radius));
+                if (parent.rigidbody.velocity.z > 0)
+                    parent.rigidbody.velocity.SetZ(parent.rigidbody.velocity.z * -1);
+            }
+            if (parent.transform.position.z < minZ + parent.radius)
+            {
+                parent.transform.position.SetZ(GMath.Triangle(parent.transform.position.z - parent.radius + halfdepth, room.worldSize.z) + parent.radius - halfdepth);
+                if (parent.rigidbody.velocity.z < 0)
+                    parent.rigidbody.velocity.SetZ(parent.rigidbody.velocity.z * -1);
             }
         }
 

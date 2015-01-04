@@ -211,7 +211,7 @@ namespace OrbItProcs
 
         public void Draw(Room room, Vector2 position, Color color)
         {
-            room.camera.AddPermanentDraw(texture, position, color * alpha, scale, rotation, 20);
+            //room.camera.AddPermanentDraw(texture, position, color * alpha, scale, rotation, 20);
         }
 
     }

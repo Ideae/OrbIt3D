@@ -21,8 +21,9 @@ public class OrbIt : MonoBehaviour {
     public static float Width { get; set; }
     public static float Height { get; set; }
     public static float Depth { get; set; }
-    public static Vector2 origin { get; set; }
+    public static Vector3 origin { get { return roomIndicator.position; } set { roomIndicator.position = value; } }
     
+    private static Transform roomIndicator;
 
     public static GameMode globalGameMode{get;set;}
     public Room room { get; set; }
@@ -35,8 +36,7 @@ public class OrbIt : MonoBehaviour {
     void Awake()
     {
         game = this;
-        Transform roomIndicator = transform.FindChild("Room");
-        origin = new Vector2(roomIndicator.position.x, roomIndicator.position.y);
+        roomIndicator = transform.FindChild("Room");
         Width = roomIndicator.GetComponent<RoomDimensions>().width;
         Height = roomIndicator.GetComponent<RoomDimensions>().height;
         Depth = roomIndicator.GetComponent<RoomDimensions>().depth;

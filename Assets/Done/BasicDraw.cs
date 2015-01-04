@@ -51,8 +51,8 @@ namespace OrbItProcs
         /// <summary>
         /// The layer that the node will draw on.
         /// </summary>
-        [Info(UserLevel.User, "The layer that the node will draw on.")]
-        public Layers DrawLayer { get; set; }
+        //[Info(UserLevel.User, "The layer that the node will draw on.")]
+        //public Layers DrawLayer { get; set; }
         public BasicDraw() : this(null) { }
         public BasicDraw(Node parent = null) 
         {
@@ -65,7 +65,7 @@ namespace OrbItProcs
         }
         public override void SetupSprites()
         {
-            Layers layer = parent.IsPlayer ? Layers.Player : DrawLayer;
+            //Layers layer = parent.IsPlayer ? Layers.Player : DrawLayer;
             //draw.addSprite("sprite", parent.body.texture, layer).SetColor(parent.body.color);
         }
         public void UpdateColor()

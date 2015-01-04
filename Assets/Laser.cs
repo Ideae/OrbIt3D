@@ -88,75 +88,75 @@ namespace OrbItProcs
             
         public override void Draw()
         {
-            if (++counter % onceEveryAmount != 0) return; 
-            Vector2 start = parent.transform.position;
-            if (prevPos == Vector2.zero)
-            {
-                prevPos = start;
-                return;
-            }
-            //don't draw lines from screen edge to edge if screenwrapping
-            if (parent.movement.mode == movemode.screenwrap)
-            {
-                float diffx = prevPos.x - start.x;
-                if (diffx > room.worldWidth / 2)
-                {
-                    start.x += room.worldWidth;
-                }
-                else if (diffx < -room.worldWidth / 2)
-                {
-                    start.x -= room.worldWidth;
-                }
-                float diffy = prevPos.y - start.y;
-                if (diffy > room.worldHeight / 2)
-                {
-                    start.y += room.worldHeight;
-                }
-                else if (diffy < -room.worldHeight / 2)
-                {
-                    start.y -= room.worldHeight;
-                }
-            }
-
-            Vector2 diff = (prevPos - start);
-            Vector2 centerpoint = (prevPos + start) / 2;
-            float len = diff.magnitude;
-            Vector2 scalevect;
-            float xscale = len;
-            float yscale = thickness;
-            //float outerscale = yscale;
-            //float beamdist = 1f;
-            if (brightness)
-            {
-                xscale = brightness;
-            }
-            //if (thickness)
+            //if (++counter % onceEveryAmount != 0) return; 
+            //Vector2 start = parent.transform.position;
+            //if (prevPos == Vector2.zero)
             //{
-            //    yscale = thickness;
-            //    outerscale = yscale * beamRatio;
+            //    prevPos = start;
+            //    return;
             //}
-
-            scalevect = new Vector2(xscale, yscale);
-
-            float testangle = (float)(Math.Atan2(diff.y, diff.x));
-
-            VMath.NormalizeSafe(ref diff);
-            diff = new Vector2(-diff.y, diff.x);
-
-            //uncommet later when not using direction based color shit
-            Color coll;
-            int alpha = 255;//i * (255 / min);
-            //Console.WriteLine(alpha);
-            if (IsColorByAngle)
-            {
-                coll = ColorChanger.getColorFromHSV((testangle + (float)Math.PI) * (float)(180 / Math.PI));
-            }
-            else
-            {
-                coll = new Color(parent.body.color.r, parent.body.color.g, parent.body.color.b, alpha);
-            }
-            room.camera.AddPermanentDraw(textures.whitepixel, centerpoint, parent.body.color, scalevect, testangle, laserLength);
-            prevPos = start;
+            ////don't draw lines from screen edge to edge if screenwrapping
+            //if (parent.movement.mode == movemode.screenwrap)
+            //{
+            //    float diffx = prevPos.x - start.x;
+            //    if (diffx > room.worldWidth / 2)
+            //    {
+            //        start.x += room.worldWidth;
+            //    }
+            //    else if (diffx < -room.worldWidth / 2)
+            //    {
+            //        start.x -= room.worldWidth;
+            //    }
+            //    float diffy = prevPos.y - start.y;
+            //    if (diffy > room.worldHeight / 2)
+            //    {
+            //        start.y += room.worldHeight;
+            //    }
+            //    else if (diffy < -room.worldHeight / 2)
+            //    {
+            //        start.y -= room.worldHeight;
+            //    }
+            //}
+            //
+            //Vector2 diff = (prevPos - start);
+            //Vector2 centerpoint = (prevPos + start) / 2;
+            //float len = diff.magnitude;
+            //Vector2 scalevect;
+            //float xscale = len;
+            //float yscale = thickness;
+            ////float outerscale = yscale;
+            ////float beamdist = 1f;
+            //if (brightness)
+            //{
+            //    xscale = brightness;
+            //}
+            ////if (thickness)
+            ////{
+            ////    yscale = thickness;
+            ////    outerscale = yscale * beamRatio;
+            ////}
+            //
+            //scalevect = new Vector2(xscale, yscale);
+            //
+            //float testangle = (float)(Math.Atan2(diff.y, diff.x));
+            //
+            //VMath.NormalizeSafe(ref diff);
+            //diff = new Vector2(-diff.y, diff.x);
+            //
+            ////uncommet later when not using direction based color shit
+            //Color coll;
+            //int alpha = 255;//i * (255 / min);
+            ////Console.WriteLine(alpha);
+            //if (IsColorByAngle)
+            //{
+            //    coll = ColorChanger.getColorFromHSV((testangle + (float)Math.PI) * (float)(180 / Math.PI));
+            //}
+            //else
+            //{
+            //    coll = new Color(parent.material.color.r, parent.material.color.g, parent.material.color.b, alpha);
+            //}
+            //room.camera.AddPermanentDraw(textures.whitepixel, centerpoint, parent.material.color, scalevect, testangle, laserLength);
+            //prevPos = start;
         }
     }
 }

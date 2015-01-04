@@ -23,7 +23,7 @@ namespace OrbItProcs {
         //public GridSystem gridsystemAffect { get; set; }
         //public Level level { get; set; }
         //public RenderTarget2D roomRenderTarget { get; set; }
-        public ThreadedCamera camera { get; set; }
+        //public ThreadedCamera camera { get; set; }
         public Scheduler scheduler { get; set; }
         //Entities
         public Group masterGroup { get; set; }
@@ -39,9 +39,9 @@ namespace OrbItProcs {
         public List<Rect> linesToDraw = new List<Rect>();
         //Values
         public Vector3 worldSize = Vector3.one;
-        //public int worldWidth { get; set; }
-        //public int worldHeight { get; set; }
-        //public int worldDepth { get; set; }
+        public float worldWidth { get { return worldSize.x; } set { worldSize.x = value; } }
+        public float worldHeight { get { return worldSize.y; } set { worldSize.y = value; } }
+        public float worldDepth { get { return worldSize.z; } set { worldSize.z = value; } }
         public bool DrawLinks { get; set; }
         public Node targetNode { get; set; }
         public Color borderColor { get; set; }
@@ -67,7 +67,7 @@ namespace OrbItProcs {
             //level = new Level(this, 40, 40, gridsystemAffect.cellWidth, gridsystemAffect.cellHeight);
             //roomRenderTarget = new RenderTarget2D(game.GraphicsDevice, OrbIt.ScreenWidth, OrbIt.ScreenHeight);
             //gridsystemCollision = new GridSystem(this, gridsystemAffect.cellsX, new Vector2(0, worldHeight - OrbIt.Height), worldWidth, OrbIt.Height);
-            camera = new ThreadedCamera(this, 1f);
+            //camera = new ThreadedCamera(this, 1f);
             DrawLinks = true;
             scheduler = new Scheduler();
 
@@ -214,7 +214,7 @@ namespace OrbItProcs {
                 PendingRoomResize = null;
             }
 
-            Draw();
+            //Draw();
             
         }
 
@@ -251,7 +251,7 @@ namespace OrbItProcs {
                 n.Draw();
             }
 
-            camera.drawGrid(linesToDraw, borderColor);
+            //camera.drawGrid(linesToDraw, borderColor);
             linesToDraw = new List<Rect>();
 
 
@@ -306,7 +306,7 @@ namespace OrbItProcs {
         public Node spawnNode(int worldMouseX, int worldMouseY)
         {
             Dictionary<object, object> userP = new Dictionary<object, object>() {
-                                { nodeE.position, new Vector2(worldMouseX,worldMouseY) },
+                                { nodeE.position, new Vector3(worldMouseX,worldMouseY, 0f) },
             };
             return spawnNode(userP);
         }

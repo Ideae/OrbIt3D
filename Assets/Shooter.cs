@@ -133,9 +133,10 @@ namespace OrbItProcs
                 { typeof(Lifetime), true},
             };
             bulletNode = new Node(room, props);
-            bulletNode.Comp<Collision>().isSolid = false;
-            bulletNode.body.isSolid = true;
-            bulletNode.body.restitution = 1f;
+            //bulletNode.Comp<Collision>().isSolid = false;
+            bulletNode.isSolid = false;
+            bulletNode.isSolid = true;
+            //bulletNode.body.restitution = 1f; //need to make bouncy with physic material?
             bulletNode.Comp<ColorChanger>().colormode = ColorChanger.ColorMode.hueShifter;
             bulletNode.Comp<Lifetime>().timeUntilDeath.enabled = true;
             bulletNode.Comp<Laser>().thickness = 5f;
@@ -207,7 +208,7 @@ namespace OrbItProcs
                 Node nearNode = null;
                 foreach (Node n in room.groups.player.entities)
                 {
-                    float dist = Vector2.Distance(parent.transform.position, n.transform.position);
+                    float dist = Vector3.Distance(parent.transform.position, n.transform.position);
                     if (dist < nearest)
                     {
                         nearNode = n;
@@ -216,7 +217,7 @@ namespace OrbItProcs
                 }
                 if (nearNode != null)
                 {
-                    Vector2 dir = nearNode.transform.position - parent.transform.position;
+                    Vector3 dir = nearNode.transform.position - parent.transform.position;
                     VMath.NormalizeSafe(ref dir);
                     dir.y *= -1;
                     FireNode(dir);
@@ -228,7 +229,7 @@ namespace OrbItProcs
         {
             Meta.drawBar(parent, 0.5f, (float)ammo / (float)maxAmmo, true, Color.magenta);
         }
-        public void FireNode(Vector2 dir)
+        public void FireNode(Vector3 dir)
         {
             if (maxAmmo.enabled) ammo--;
             if (!useStickVelocity) VMath.NormalizeSafe(ref dir);
@@ -236,12 +237,8 @@ namespace OrbItProcs
             n.Comp<Lifetime>().timeUntilDeath.value = bulletLife;
             n.rigidbody.velocity = dir * speed;
             n.transform.position = parent.transform.position;
-            n.body.AddExclusionCheck(parent.body);
-            //if (parent.HasComp<Sword>())
-            //{
-            //    n.body.AddExclusionCheck(parent.Comp<Sword>().swordNode.body);
-            //    //n.body.AddExclusion(parent.Comp<Sword>().sword.body);
-            //}
+            //n.body.AddExclusionCheck(parent.body);
+
             if (parent.IsPlayer)
             {
                 n.Comp<ColorChanger>().colormode = ColorChanger.ColorMode.none;
@@ -280,7 +277,7 @@ namespace OrbItProcs
                 them.meta.CalculateDamage(parent, damage);
                 bullet.OnDeath(null);
             };
-            n.body.OnCollisionEnter += bulletHit;
+            //n.body.OnCollisionEnter += bulletHit;
             //n.body.isSolid = false;
             if (maxAmmo.enabled && ammo <= 0)
             {

@@ -253,8 +253,8 @@ namespace OrbItProcs {
         {
             if (val == nodeE.active) active = (bool)dict[val];
             if (val == nodeE.name) name = (string)dict[val];
-            if (val == nodeE.position) transform.position = (Vector2)dict[val];
-            if (val == nodeE.velocity) rigidbody.velocity = (Vector2)dict[val];
+            if (val == nodeE.position) transform.position = (Vector3)dict[val];
+            if (val == nodeE.velocity) rigidbody.velocity = (Vector3)dict[val];
             if (val == nodeE.radius) radius = (float)dict[val];
             if (val == nodeE.mass) rigidbody.mass = (float)dict[val];
             if (val == nodeE.texture) texture = (textures)dict[val];
@@ -264,7 +264,8 @@ namespace OrbItProcs {
         public float radius
         {
             get { return transform.localScale.x; }
-            set { transform.localScale = new Vector3(value, value, value); }
+            set { 
+                transform.localScale = new Vector3(value, value, value); }
         }
         //lower performance because of check for null
         public Transform transform { get { return gameobject != null ? gameobject.transform : null; } }
@@ -283,10 +284,14 @@ namespace OrbItProcs {
             //("Everyone else must use the Parameterized constructor and pass a room reference.");
             name = name + nodeCounter;
             nodeCounter++;
+            GameObject prefab = (GameObject)Resources.Load("NodePrefab");
+            gameobject = (GameObject)GameObject.Instantiate(prefab);
+            gameobject.SetActive(false);
+
             meta = new Meta(this);
             movement = new Movement(this);
-            
-            
+
+
             radius = defaultNodeSize;
             basicdraw = new BasicDraw(this);
             movement.active = true; 
@@ -302,9 +307,6 @@ namespace OrbItProcs {
                     source.comps[t].AffectOther(other);
                 }
             };
-
-            gameobject = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("NodePrefab"));
-            gameobject.SetActive(false);
 
         }
         Action<Node, Node> affectAction;
@@ -409,7 +411,7 @@ namespace OrbItProcs {
         }
         public Func<Node, bool> AffectExclusionCheck = null;
         public int affectionReach = 180;
-        public Vector2 previousFramePosition = new Vector2();
+        public Vector3 previousFramePosition = new Vector3();
         public virtual void Update()
         {
             if (IsPlayer)
@@ -420,7 +422,7 @@ namespace OrbItProcs {
             if (!movement.pushable && tempPosition != Vector3.zero)
             {
                 transform.position = tempPosition;
-                rigidbody.velocity = Vector2.zero;
+                rigidbody.velocity = Vector3.zero;
             }
             previousFramePosition = tempPosition;
             effvelocity = transform.position - tempPosition;
@@ -944,6 +946,12 @@ namespace OrbItProcs {
                 {
                     Vector2 vect = (Vector2)field.GetValue(sourceNode);
                     Vector2 newvect = new Vector2(vect.x, vect.y);
+                    field.SetValue(destNode, newvect);
+                }
+                else if (field.FieldType == typeof(Vector3))
+                {
+                    Vector3 vect = (Vector3)field.GetValue(sourceNode);
+                    Vector3 newvect = new Vector3(vect.x, vect.y, vect.z);
                     field.SetValue(destNode, newvect);
                 }
                 else if (field.FieldType == typeof(Color))

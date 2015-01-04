@@ -86,18 +86,18 @@ namespace OrbItProcs
 
         public void Draw()
         {
-            if (gameMode == GameModes.FreeForAll || gameMode == GameModes.Cooperative) return;
-            foreach (var p in playerTeammates.Keys)
-            {
-                if (playerTeammates[p] != null)
-                {
-                    foreach (var pp in playerTeammates[p])
-                    {
-                        if (p == pp) continue;
-                        game.room.camera.DrawLine(p.node.transform.position, pp.node.transform.position, 3f, Color.white, Layers.Under1);
-                    }
-                }
-            }
+            //if (gameMode == GameModes.FreeForAll || gameMode == GameModes.Cooperative) return;
+            //foreach (var p in playerTeammates.Keys)
+            //{
+            //    if (playerTeammates[p] != null)
+            //    {
+            //        foreach (var pp in playerTeammates[p])
+            //        {
+            //            if (p == pp) continue;
+            //            game.room.camera.DrawLine(p.node.transform.position, pp.node.transform.position, 3f, Color.white, Layers.Under1);
+            //        }
+            //    }
+            //}
         }
 
         public void SetUpTeams()

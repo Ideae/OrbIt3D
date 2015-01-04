@@ -124,10 +124,10 @@ namespace OrbItProcs
             if (rightClickCount % rightClickMax == 0)
             {
                 //Vector2 positionToSpawn = new Vector2(Game1.sWidth, Game1.sHeight);
-                Vector2 positionToSpawn = spawnPos;
+                Vector3 positionToSpawn = spawnPos;
                 //positionToSpawn /= (game.room.mapzoom * 2);
                 //positionToSpawn /= (2);
-                Vector2 diff = OInput.WorldMousePos;
+                Vector3 diff = OInput.WorldMousePos;
                 //diff *= room.zoom;
                 diff = diff - positionToSpawn;
                 //diff.Normalize();

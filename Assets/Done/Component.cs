@@ -191,6 +191,12 @@ namespace OrbItProcs
                     Vector2 newvect = new Vector2(vect.x, vect.y);
                     field.SetValue(destComp, newvect);
                 }
+                else if (field.FieldType == typeof(Vector3))
+                {
+                    Vector3 vect = (Vector3)field.GetValue(sourceComp);
+                    Vector3 newvect = new Vector3(vect.x, vect.y, vect.z);
+                    field.SetValue(destComp, newvect);
+                }
                 else if (field.FieldType == typeof(Color))
                 {
                     Color col = (Color)field.GetValue(sourceComp);
@@ -241,6 +247,12 @@ namespace OrbItProcs
                {
                    Vector2 vect = (Vector2)field.GetValue(sourceObject);
                    Vector2 newvect = new Vector2(vect.x, vect.y);
+                   field.SetValue(destObject, newvect);
+               }
+               else if (field.FieldType == typeof(Vector3))
+               {
+                   Vector3 vect = (Vector3)field.GetValue(sourceObject);
+                   Vector3 newvect = new Vector3(vect.x, vect.y, vect.z);
                    field.SetValue(destObject, newvect);
                }
                else if (field.FieldType == typeof(Color))

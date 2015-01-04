@@ -216,33 +216,33 @@ namespace OrbItProcs
 
         public static void drawBar(Node node, float scale, float Ratio, bool Rotate, Color full, Color? threeQuarters = null, Color? half = null, Color? oneQuarter = null)
         {
-            float baseRotation = Rotate ? node.transform.localEulerAngles.x : 0f;
-            float rotation = baseRotation + (1f - Ratio) * GMath.TwoPI;
-            float rotation2 = baseRotation;
-            Color c;
-            Layers hideLayer = Layers.Over1;
-            if (Ratio > 0.75f) 
-                c = full;
-            else if (Ratio > 0.5f) 
-                c = threeQuarters ?? full;
-            else if (Ratio > 0.25f) 
-            {
-                c = half ?? threeQuarters ?? full;
-                hideLayer = Layers.Over3;
-                rotation2 = rotation - GMath.PI; 
-            }
-            else 
-            {
-                c = oneQuarter ?? half ?? threeQuarters ?? full;
-                hideLayer = Layers.Over3;
-                rotation2 = rotation - GMath.PI;
-            }
-            //float tempscale = node.body.scale;
-            float tempscale = 1f;
-            node.room.camera.Draw(textures.outerL, node.transform.position, Color.black, tempscale * scale, baseRotation, hideLayer);
-            node.room.camera.Draw(textures.outerR, node.transform.position, Color.black, tempscale * scale, baseRotation, Layers.Over1);
-            node.room.camera.Draw(textures.innerL, node.transform.position, c, tempscale * scale, rotation, Layers.Over2);
-            node.room.camera.Draw(textures.innerR, node.transform.position, c, tempscale * scale, rotation2, Layers.Over2);
+            //float baseRotation = Rotate ? node.transform.localEulerAngles.x : 0f;
+            //float rotation = baseRotation + (1f - Ratio) * GMath.TwoPI;
+            //float rotation2 = baseRotation;
+            //Color c;
+            //Layers hideLayer = Layers.Over1;
+            //if (Ratio > 0.75f) 
+            //    c = full;
+            //else if (Ratio > 0.5f) 
+            //    c = threeQuarters ?? full;
+            //else if (Ratio > 0.25f) 
+            //{
+            //    c = half ?? threeQuarters ?? full;
+            //    hideLayer = Layers.Over3;
+            //    rotation2 = rotation - GMath.PI; 
+            //}
+            //else 
+            //{
+            //    c = oneQuarter ?? half ?? threeQuarters ?? full;
+            //    hideLayer = Layers.Over3;
+            //    rotation2 = rotation - GMath.PI;
+            //}
+            ////float tempscale = node.body.scale;
+            //float tempscale = 1f;
+            //node.room.camera.Draw(textures.outerL, node.transform.position, Color.black, tempscale * scale, baseRotation, hideLayer);
+            //node.room.camera.Draw(textures.outerR, node.transform.position, Color.black, tempscale * scale, baseRotation, Layers.Over1);
+            //node.room.camera.Draw(textures.innerL, node.transform.position, c, tempscale * scale, rotation, Layers.Over2);
+            //node.room.camera.Draw(textures.innerR, node.transform.position, c, tempscale * scale, rotation2, Layers.Over2);
         }
         public override void OnRemove(Node other)
         {
