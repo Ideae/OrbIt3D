@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Component = OrbItProcs.Component;
+using Component = OrbItProcs.OComponent;
 using System.Collections.ObjectModel;
 using OrbItProcs;
 using UnityEngine;
@@ -86,7 +86,7 @@ namespace OrbItProcs {
             
             //defaultNode.IsDefault = true;
 
-            foreach(Component c in defaultNode.comps.Values)
+            foreach(OComponent c in defaultNode.comps.Values)
             {
                 c.AfterCloning();
             }
@@ -135,7 +135,7 @@ namespace OrbItProcs {
         
         public void MakePresetGroups()
         {
-            var infos = Component.compInfos;
+            var infos = OComponent.compInfos;
             int runenum = 0;
             foreach(Type t in infos.Keys)
             {
@@ -161,7 +161,7 @@ namespace OrbItProcs {
             itemDef.addComponent(typeof(ItemPayload), true);
             itemDef.movement.active = false;
 
-            var infos = Component.compInfos;
+            var infos = OComponent.compInfos;
             foreach (Type t in infos.Keys)
             {
                 Info info = infos[t];
@@ -170,7 +170,7 @@ namespace OrbItProcs {
                 //if (info.userLevel == UserLevel.Developer || info.userLevel == UserLevel.Advanced) continue;
                 Node nodeDef = itemDef.CreateClone(this); ///
                 //nodeDef.addComponent(t, true);
-                Component c = Node.MakeComponent(t, true, nodeDef);
+                OComponent c = Node.MakeComponent(t, true, nodeDef);
                 nodeDef.Comp<ItemPayload>().AddComponentItem(c);
                 new Group(this, nodeDef, groups.items, t.ToString().LastWord('.') + " Item");
             }

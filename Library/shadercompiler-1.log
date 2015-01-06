@@ -1,0 +1,150 @@
+Base path: C:/Program Files (x86)/Unity/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-1-10028
+Cmd: getPlatforms
+Cmd: preprocess
+  insize=2190 outsize=521 ok=1
+Cmd: preprocess
+  insize=1934 outsize=258 ok=1
+Cmd: preprocess
+  insize=2034 outsize=633 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1657 outsize=990 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1657 outsize=600 kw= ok=1
+Cmd: preprocess
+  insize=1934 outsize=258 ok=1
+Cmd: preprocess
+  insize=1931 outsize=256 ok=1
+Cmd: preprocess
+  insize=1932 outsize=256 ok=1
+Cmd: preprocess
+  insize=2077 outsize=676 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1659 outsize=990 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1659 outsize=600 kw= ok=1
+Cmd: preprocess
+  insize=2175 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (50): implicit truncation of vector type
+  error: 2 plat 4 at (52): undeclared identifier 'IN'
+  api=4 type=0 insize=1752 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2176 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (50): implicit truncation of vector type
+  error: 2 plat 4 at (53): syntax error: unexpected token 'f'
+  error: 2 plat 4 at (53): undeclared identifier 'tri'
+  api=4 type=0 insize=1753 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2423 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (60): implicit truncation of vector type
+  error: 2 plat 4 at (63): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (63): syntax error: unexpected token 'f'
+  api=4 type=0 insize=1990 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2447 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (60): implicit truncation of vector type
+  error: 2 plat 4 at (63): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (63): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2014 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2418 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (59): implicit truncation of vector type
+  error: 2 plat 4 at (62): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (62): syntax error: unexpected token 'f'
+  api=4 type=0 insize=1986 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2463 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (59): implicit truncation of vector type
+  error: 2 plat 4 at (63): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (63): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2030 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2463 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (59): implicit truncation of vector type
+  error: 2 plat 4 at (63): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (63): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2030 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2463 outsize=675 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (59): implicit truncation of vector type
+  error: 2 plat 4 at (62): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (62): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2030 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2463 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (59): implicit truncation of vector type
+  error: 2 plat 4 at (63): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (63): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2030 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2449 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (59): implicit truncation of vector type
+  error: 2 plat 4 at (63): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (63): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2016 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2456 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (61): implicit truncation of vector type
+  error: 2 plat 4 at (65): 'tri': no matching 0 parameter function
+  error: 2 plat 4 at (65): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2021 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2445 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (61): implicit truncation of vector type
+  error: 2 plat 4 at (65): syntax error: unexpected token 'f'
+  error: 2 plat 4 at (66): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2010 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2445 outsize=676 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (61): implicit truncation of vector type
+  error: 2 plat 4 at (66): syntax error: unexpected token 'f'
+  api=4 type=0 insize=2010 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2444 outsize=675 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2009 outsize=990 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2009 outsize=510 kw= ok=1
+Cmd: preprocess
+  insize=2442 outsize=676 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2007 outsize=990 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2007 outsize=1095 kw= ok=1
+Cmd: preprocess
+  insize=2514 outsize=1827 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=952 outsize=1274 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=952 outsize=811 kw= ok=1
+Cmd: preprocess
+  insize=1489 outsize=1486 ok=1
+Cmd: compileSnippet
+  api=0 type=0 insize=952 outsize=397 kw= ok=1
+Cmd: compileSnippet
+  api=8 type=1 insize=952 outsize=1138 kw= ok=1
+Cmd: preprocess
+  insize=2437 outsize=662 ok=1
+Cmd: compileSnippet
+  error: 1 plat 4 at (61): implicit truncation of vector type
+  error: 2 plat 4 at (66): undeclared identifier '_Color'
+  api=4 type=0 insize=2016 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=2461 outsize=661 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2040 outsize=990 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2040 outsize=1193 kw= ok=1

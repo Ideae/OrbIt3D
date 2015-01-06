@@ -16,7 +16,7 @@ namespace OrbItProcs
     /// Shoots out damaging lasers that are automatic, single fire or rapid firing.
     /// </summary>
     [Info(UserLevel.User, "Shoots out damaging lasers that are automatic, single fire or rapid firing.", CompType)]
-    public class Shooter : Component
+    public class Shooter : OComponent
     {
         public override bool active
         {
@@ -141,7 +141,7 @@ namespace OrbItProcs
             bulletNode.Comp<Lifetime>().timeUntilDeath.enabled = true;
             bulletNode.Comp<Laser>().thickness = 5f;
             bulletNode.Comp<Laser>().laserLength = 20;
-            bulletNode.Comp<Movement>().randInitialVel.enabled = false;
+            bulletNode.movement.randInitialVel.enabled = false;
             bulletNode.group = room.groups.bullets;
             
             

@@ -59,14 +59,17 @@ public class OrbItInspector : EditorWindow
         Type type = obj.GetType();
         
         Tuple<object, int> key = new Tuple<object, int>(obj, EditorGUI.indentLevel);
-        if (!foldoutToggles.ContainsKey(key)) foldoutToggles[key] = false;
-
+        if (!foldoutToggles.ContainsKey(key))
+        {
+            if (obj is NodeScript || obj is Node) foldoutToggles[key] = true;
+            else foldoutToggles[key] = false;
+        }
         foldoutToggles[key] = EditorGUILayout.Foldout(foldoutToggles[key], name);
         if (foldoutToggles[key])
         {
             BindingFlags flags = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance;
             var fields = type.GetFields(flags);
-            if (obj is OrbItProcs.Component)
+            if (obj is OrbItProcs.OComponent)
             {
                 flags ^= BindingFlags.DeclaredOnly;
             }
@@ -76,11 +79,13 @@ public class OrbItInspector : EditorWindow
                 EditorGUI.indentLevel++;
                 foreach (var prop in props)
                 {
+                    if (OComponent.restrictedTypes.Contains(prop.DeclaringType)) continue;
                     FPInfo fpinfo = new FPInfo(prop);
                     ShowPropertyControl(obj, fpinfo);
                 }
                 foreach (var field in fields)
                 {
+                    if (OComponent.restrictedTypes.Contains(field.DeclaringType)) continue;
                     FPInfo fpinfo = new FPInfo(field);
                     ShowPropertyControl(obj, fpinfo);
                 }
@@ -130,7 +135,7 @@ public class OrbItInspector : EditorWindow
             object enumval = EditorGUILayout.EnumPopup(fpinfo.Name, e);
             if (!e.Equals(enumval))
             {
-                fpinfo.SetValue(enumval, obj);
+                fpinfo.SetValue(obj, enumval);
             }
         }
         else if (ptype.IsClass)

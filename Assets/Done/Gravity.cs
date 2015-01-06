@@ -16,7 +16,7 @@ namespace OrbItProcs {
     /// Attracts or repels nodes that it affects.
     /// </summary>
     [Info(UserLevel.User, "Attracts or repels nodes that it affects.", CompType)]
-    public class Gravity : Component, ILinkable//, IMultipliable//, IRadius
+    public class Gravity : OComponent, ILinkable//, IMultipliable//, IRadius
     {
         public const mtypes CompType = mtypes.affectother | mtypes.draw;
         public override mtypes compType { get { return CompType; } set { } }

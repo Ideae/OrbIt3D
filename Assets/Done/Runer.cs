@@ -10,7 +10,7 @@ namespace OrbItProcs
     /// Draws a rune image after the node's basic draw.
     /// </summary>
     [Info(UserLevel.User, "Draws a rune image after the node's basic draw.", CompType)]
-    public class Rune : Component
+    public class Rune : OComponent
     {
         public const mtypes CompType = mtypes.draw;
         public override mtypes compType { get { return CompType; } set { } }

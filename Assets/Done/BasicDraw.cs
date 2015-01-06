@@ -10,7 +10,7 @@ namespace OrbItProcs
     /// Basic Draw Component, ensures that you can see the node.
     /// </summary>
     [Info(UserLevel.User, "Basic Draw Component, ensures that you can see the node.", CompType)]
-    public class BasicDraw : Component
+    public class BasicDraw : OComponent
     {
         public enum Initial
         {

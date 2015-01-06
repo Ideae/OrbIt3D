@@ -107,7 +107,7 @@ namespace OrbItProcs
             }
             return null;
         }
-        public void SetValue(object value, object obj)
+        public void SetValue(object obj, object value)
         {
             if (propertyInfo != null)
             {

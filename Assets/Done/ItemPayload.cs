@@ -10,7 +10,7 @@ namespace OrbItProcs
     /// A payload of items or components to add to the node that picks up this payload.
     /// </summary>
     [Info(UserLevel.User, "A payload of items or components to add to the node that picks up this payload.", CompType)]
-    public class ItemPayload : Component
+    public class ItemPayload : OComponent
     {
         public const mtypes CompType = mtypes.draw | mtypes.affectself | mtypes.item;
         public override mtypes compType { get { return CompType; } set { } }
@@ -83,7 +83,7 @@ namespace OrbItProcs
                     if (!NodesCanGrab) return;
                 }
                 if (AlreadyDelivered.Contains(o)) return;
-                Dictionary<Type, Component> dict;
+                Dictionary<Type, OComponent> dict;
                 if (DropParentsComponents)
                 {
                     dict = parent.comps;
@@ -97,8 +97,8 @@ namespace OrbItProcs
                 {
                     if (dict[t].isEssential()) continue;
                     if (o.HasComp(t) && !OverwriteComponents) continue;
-                    Component comp = dict[t];
-                    Component clone = comp.CreateClone(o);
+                    OComponent comp = dict[t];
+                    OComponent clone = comp.CreateClone(o);
                     o.addComponent(clone, true, true);
                     clone.OnSpawn();
                 }
@@ -127,11 +127,11 @@ namespace OrbItProcs
         }
         public override void AfterCloning()
         {
-            Dictionary<Type, Component> newPayload = new Dictionary<Type, Component>();
+            Dictionary<Type, OComponent> newPayload = new Dictionary<Type, OComponent>();
             foreach (Type t in payloadNode.comps.Keys.ToList())
             {
-                Component comp = payloadNode.comps[t];
-                Component clone = comp.CreateClone(parent);
+                OComponent comp = payloadNode.comps[t];
+                OComponent clone = comp.CreateClone(parent);
                 newPayload[t] = clone;
                 if (timeLimit.enabled)
                     clone.SetDecayMaxTime(timeLimit.value);
@@ -139,11 +139,11 @@ namespace OrbItProcs
             }
             payloadNode.comps = newPayload;
         }
-        public void AddComponentItem(Component component, bool overwrite = true)
+        public void AddComponentItem(OComponent component, bool overwrite = true)
         {
             Type t = component.GetType();
             if (payloadNode.comps.ContainsKey(t) && !overwrite) return;
-            Component clone = component.CreateClone(parent);
+            OComponent clone = component.CreateClone(parent);
             payloadNode.comps[t] = clone;
         }
 
@@ -176,7 +176,7 @@ namespace OrbItProcs
                     pack.Draw(room, parent.transform.position, parent.material.color);
                 }
             }
-            foreach (Component c in payloadNode.comps.Values)
+            foreach (OComponent c in payloadNode.comps.Values)
             {
                 c.Draw();
             }

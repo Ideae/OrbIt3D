@@ -52,6 +52,10 @@ namespace OrbItProcs
                 {
                     value.group = this;
                 }
+                if (nodescript != null)
+                {
+                    nodescript.node = value;
+                }
             } 
         }
         public Room room;
@@ -100,7 +104,7 @@ namespace OrbItProcs
         public ObservableHashSet<Link> TargetLinks { get { return _TargetLinks; } set { _TargetLinks = value; } }
         public List<Group> groupPath { get; set; }
         public GameObject gameObject { get; set; }
-
+        public NodeScript nodescript { get; set; }
         public Group()
             : this(null)
         {
@@ -139,6 +143,9 @@ namespace OrbItProcs
             groupPath = new List<Group>();
 
             gameObject = new GameObject(Name);
+            nodescript = gameObject.AddComponent<NodeScript>();
+            nodescript.node = defaultNode;
+
             if (parentGroup != null)
             {
                 parentGroup.AddGroup(this.Name, this);

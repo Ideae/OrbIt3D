@@ -5,8 +5,6 @@ using System.Text;
 
 using UnityEngine;
 using System.Reflection;
-using Component = OrbItProcs.Component;
-
 namespace OrbItProcs
 {
     [Flags]
@@ -27,7 +25,7 @@ namespace OrbItProcs
         item = 1024,
     };
 
-    public abstract class Component {
+    public abstract class OComponent {//  : MonoBehaviour {
         public virtual mtypes compType { get; set; }
         protected bool _active = false;
         [Info(UserLevel.Developer)]
@@ -108,34 +106,35 @@ namespace OrbItProcs
         }
 
 
-        public Component()
+        public OComponent()
         {
             //if ((compType & mtypes.draw) == mtypes.draw)
             //{
             //    draw = new DrawControl(this);
             //}
         }
-        public static Component GenerateComponent(Type t, Node par)
+        public static OComponent GenerateComponent(Type t, Node par)
         {
-            Component component = (Component)Activator.CreateInstance(t, par);
+            OComponent component = (OComponent)Activator.CreateInstance(t, par);
             return component;
         }
         
-        public Component CreateClone(Node par)
+        public OComponent CreateClone(Node par)
         {
-            Component comp = (Component)Activator.CreateInstance(this.GetType(), par);
+            OComponent comp = (OComponent)Activator.CreateInstance(this.GetType(), par);
             CloneComponent(this, comp);
             return comp;
         }
 
-
-        public static void CloneComponent(Component sourceComp, Component destComp)
+        public static HashSet<Type> restrictedTypes = new HashSet<Type>() { typeof(MonoBehaviour), typeof(Behaviour), typeof(Component), typeof(UnityEngine.Object) };
+        public static void CloneComponent(OComponent sourceComp, OComponent destComp)
         {
             List<FieldInfo> fields = sourceComp.GetType().GetFields().ToList();
             fields.AddRange(sourceComp.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).ToList());
             List<PropertyInfo> properties = sourceComp.GetType().GetProperties().ToList();
             foreach (PropertyInfo property in properties)
             {
+                if (restrictedTypes.Contains(property.DeclaringType)) continue;
                 //if (property.PropertyType == typeof(ModifierInfo)) continue;
                 if (property.PropertyType == typeof(Node))
                 {
@@ -168,12 +167,16 @@ namespace OrbItProcs
                         //Console.WriteLine("We should be aware of this.");
                     }
                 }
+                
                 if (property.GetSetMethod() != null)
-                property.SetValue(destComp, property.GetValue(sourceComp, null), null);
+                {
+                    property.SetValue(destComp, property.GetValue(sourceComp, null), null);
+                }
             }
             foreach (FieldInfo field in fields)
             {
                 if (field.Name.Equals("shape")) continue;
+                if (field.IsLiteral) continue;
 
                 //No tears... Only Dreams.
 
@@ -181,7 +184,8 @@ namespace OrbItProcs
                 if ((field.FieldType == typeof(int))
                     || (field.FieldType == typeof(Single))
                     || (field.FieldType == typeof(bool))
-                    || (field.FieldType == typeof(string)))
+                    || (field.FieldType == typeof(string))
+                    || (field.FieldType.IsEnum))
                 {
                     field.SetValue(destComp, field.GetValue(sourceComp));
                 }
@@ -218,15 +222,34 @@ namespace OrbItProcs
         }
 
         //this is NOT clone component
-       public static void CloneObject(object sourceObject, object destObject)
+       public static void CloneObject(object sourceObject, object destObject, int depth = 0, bool parentProperties = false)
        {
-           List<FieldInfo> fields = sourceObject.GetType().GetFields().ToList();
-           fields.AddRange(sourceObject.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).ToList());
-           List<PropertyInfo> properties = sourceObject.GetType().GetProperties().ToList();
+           FieldInfo[] fields = sourceObject.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+           PropertyInfo[] properties = null;
+           if (parentProperties)
+           {
+               properties = sourceObject.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                   .Where(p => p.DeclaringType == sourceObject.GetType() || p.DeclaringType == sourceObject.GetType().BaseType).ToArray();
+           }
+           else
+           {
+               properties = sourceObject.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+           }
            foreach (PropertyInfo property in properties)
            {
                
-               if (property.PropertyType == typeof(Node)) continue;
+               //if (property.PropertyType == typeof(Node)) continue;
+               if (property.PropertyType.IsClass)
+               {
+                   if (depth > 0)
+                   {
+                       CloneObject(property.GetValue(sourceObject, null), property.GetValue(destObject, null), depth - 1);
+                   }
+                   else
+                   {
+                       continue;
+                   }
+               }
                if (property.GetSetMethod() != null)
                {
                    property.SetValue(destObject, property.GetValue(sourceObject, null), null);
@@ -239,7 +262,8 @@ namespace OrbItProcs
                if ((field.FieldType == typeof(int))
                    || (field.FieldType == typeof(Single))
                    || (field.FieldType == typeof(bool))
-                   || (field.FieldType == typeof(string)))
+                   || (field.FieldType == typeof(string))
+                   || (field.FieldType.IsEnum))
                {
                    field.SetValue(destObject, field.GetValue(sourceObject));
                }
@@ -271,19 +295,16 @@ namespace OrbItProcs
            if (mInfo != null) mInfo.Invoke(destObject, null);
            mInfo = destObject.GetType().GetMethod("AfterCloning");
            if (mInfo != null) mInfo.Invoke(destObject, null);
-           
-           //destObject.InitializeLists();
-           //destObject.AfterCloning();
        }
 
 
        public static HashSet<Type> compTypes;
        public static Dictionary<Type, Info> compInfos;
-       static Component()
+       static OComponent()
        {
            compTypes = AppDomain.CurrentDomain.GetAssemblies()
                       .SelectMany(assembly => assembly.GetTypes())
-                      .Where(type => type.IsSubclassOf(typeof(Component))).ToHashSet();
+                      .Where(type => type.IsSubclassOf(typeof(OComponent))).ToHashSet();
 
 
            compInfos = new Dictionary<Type, Info>();

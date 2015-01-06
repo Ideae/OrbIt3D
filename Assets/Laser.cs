@@ -10,7 +10,7 @@ namespace OrbItProcs
     /// Replaces the Basic Circle drawing with a thin and long laser that trails behind the node's current position.
     /// </summary>
     [Info(UserLevel.User, "Replaces the Basic Circle drawing with a thin and long laser that trails behind the node's current position.", CompType)]
-    public class Laser : Component
+    public class Laser : OComponent
     {
         public const mtypes CompType = mtypes.draw | mtypes.tracer;
         public override mtypes compType { get { return CompType; } set { } }

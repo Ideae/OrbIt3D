@@ -127,8 +127,8 @@ namespace OrbItProcs
 
             foreach (ILinkable component in link.components.Values)
             {
-                Component newComponent = (Component)Activator.CreateInstance(component.GetType());
-                Component.CloneComponent((Component)component, newComponent);
+                OComponent newComponent = (OComponent)Activator.CreateInstance(component.GetType());
+                OComponent.CloneComponent((OComponent)component, newComponent);
                 newComponent.active = true;
                 ((ILinkable)newComponent).link = this;
                 if (newComponent.GetType().GetProperty("activated") != null) newComponent.GetType().GetProperty("activated").SetValue(newComponent, true, null);
@@ -560,7 +560,7 @@ namespace OrbItProcs
             {
                 foreach(ILinkable link in components.Values)
                 {
-                    Component c = (Component)link;
+                    OComponent c = (OComponent)link;
                     result += c.GetType().Name.Substring(0, 4) + "|";
                 }
             }
@@ -605,7 +605,7 @@ namespace OrbItProcs
 
         public static void GetILinkableEnumVals(List<object> list)
         {
-            foreach (Type compType in Component.compTypes)
+            foreach (Type compType in OComponent.compTypes)
             {
 
                 if (!typeof(ILinkable).IsAssignableFrom(compType)) continue;

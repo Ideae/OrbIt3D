@@ -105,8 +105,8 @@ namespace OrbItProcs {
         }
         public Room room;
 
-        private Dictionary<Type, Component> _comps = new Dictionary<Type, Component>();
-        public Dictionary<Type, Component> comps { get { return _comps; } set { _comps = value; } }
+        private Dictionary<Type, OComponent> _comps = new Dictionary<Type, OComponent>();
+        public Dictionary<Type, OComponent> comps { get { return _comps; } set { _comps = value; } }
 
         private List<Type> aOtherProps = new List<Type>();
         private List<Type> aSelfProps = new List<Type>();
@@ -136,7 +136,9 @@ namespace OrbItProcs {
             set
             {
                 _movement = value;
-                if (comps != null && value != null)
+                
+                //if (comps != null && value != null)
+                if (comps != null && !object.Equals(value, null))
                 {
                     if (HasComp<Movement>())
                     {
@@ -198,11 +200,15 @@ namespace OrbItProcs {
                 }
             }
         }
-        private textures _texture = textures.whiteorb;
+        private textures _texture = textures.cage;
         public textures texture
         {
             get { return _texture; }
-            set { _texture = value; }
+            set 
+            { 
+                _texture = value;
+                material.SetTexture("_MainTex", getTexture2D());
+            }
         }
         private Player _player;
         public Player player { get { return _player; } set { _player = value; if (value != null) SortComponentListsUpdate(); } }
@@ -287,6 +293,8 @@ namespace OrbItProcs {
             GameObject prefab = (GameObject)Resources.Load("NodePrefab");
             gameobject = (GameObject)GameObject.Instantiate(prefab);
             gameobject.SetActive(false);
+            gameobject.GetComponent<NodeScript>().InitNodeScript(this);
+            texture = _texture;
 
             meta = new Meta(this);
             movement = new Movement(this);
@@ -307,7 +315,6 @@ namespace OrbItProcs {
                     source.comps[t].AffectOther(other);
                 }
             };
-
         }
         Action<Node, Node> affectAction;
         public Node(Room room, Dictionary<object, object> userProps)//, ShapeType shapetype = ShapeType.Circle)
@@ -359,11 +366,11 @@ namespace OrbItProcs {
         //    return n;
         //}
 
-        public T Comp<T>() where T : Component
+        public T Comp<T>() where T : OComponent
         {
             return (T)comps[typeof(T)];
         }
-        public bool HasComp<T>() where T : Component
+        public bool HasComp<T>() where T : OComponent
         {
             return comps.ContainsKey(typeof(T));
         }
@@ -372,7 +379,7 @@ namespace OrbItProcs {
             return comps.ContainsKey(componentType);
         }
 
-        public void EnsureContains<T>(bool active = true) where T : Component
+        public void EnsureContains<T>(bool active = true) where T : OComponent
         {
             if (!HasComp<T>())
             {
@@ -440,7 +447,7 @@ namespace OrbItProcs {
             }
             if (OnAffectOthers != null) OnAffectOthers.Invoke(this, null);
 
-            foreach (Component component in comps.Values)
+            foreach (OComponent component in comps.Values)
             {
                 component.CaluclateDecay();
                 Type t = component.GetType();
@@ -511,7 +518,7 @@ namespace OrbItProcs {
         }
         public void DrawSlow()
         {
-            foreach(Component c in comps.Values)
+            foreach(OComponent c in comps.Values)
             {
                 if (!c.active) continue;
                 if (c.hasCompType(mtypes.draw))
@@ -576,11 +583,11 @@ namespace OrbItProcs {
             bool fetch = fetchComponent(t, active, overwrite);
             if (fetch) SortComponentLists();
         }
-        public void addComponent<T>(bool active, bool overwrite = false) where T : Component
+        public void addComponent<T>(bool active, bool overwrite = false) where T : OComponent
         {
             addComponent(typeof(T), active, overwrite);
         }
-        public void addComponent(Component component, bool active, bool overwrite = false)
+        public void addComponent(OComponent component, bool active, bool overwrite = false)
         {
             component.parent = this;
             if (comps.ContainsKey(component.GetType()) && !overwrite) return;
@@ -615,7 +622,7 @@ namespace OrbItProcs {
             }
             if (overwrite)
             {
-                Component component = MakeComponent(t, active, this);
+                OComponent component = MakeComponent(t, active, this);
                 if (HasComp(t))
                 {
                     comps.Remove(t);
@@ -631,7 +638,7 @@ namespace OrbItProcs {
             {
                 if (!HasComp(t))
                 {
-                    Component component = MakeComponent(t, active, this);
+                    OComponent component = MakeComponent(t, active, this);
                     comps.Add(t, component);
                     if (IsPlayer && component.IsItem())
                     {
@@ -648,11 +655,11 @@ namespace OrbItProcs {
             
         }
 
-        public static Component MakeComponent(Type t, bool active, Node parent)
+        public static OComponent MakeComponent(Type t, bool active, Node parent)
         {
-            Component component;
+            OComponent component;
 
-            component = Component.GenerateComponent(t, parent);
+            component = OComponent.GenerateComponent(t, parent);
             //component.parent = this;
             component.active = active;
             component.AfterCloning();
@@ -839,9 +846,11 @@ namespace OrbItProcs {
             //NodeScript.AddNodeScript(gameobject, this);
             gameobject.SetActive(true);
 
+            texture = _texture;
+
             foreach (Type key in comps.Keys.ToList())
             {
-                Component component = comps[key];
+                OComponent component = comps[key];
                 component.OnSpawn();
                 //if ((component.compType & mtypes.draw) == mtypes.draw)
                 //{
@@ -856,7 +865,7 @@ namespace OrbItProcs {
             foreach (Type key in comps.Keys.ToList())
             {
                 if (key == typeof(Meta)) continue;
-                Component component = comps[key];
+                OComponent component = comps[key];
                 //MethodInfo mInfo = component.GetType().GetMethod("OnRemove");
                 //if (mInfo != null
                 //    && mInfo.DeclaringType == component.GetType())
@@ -900,6 +909,11 @@ namespace OrbItProcs {
             List<FieldInfo> fields = sourceNode.GetType().GetFields().ToList();
             fields.AddRange(sourceNode.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).ToList());
             List<PropertyInfo> properties = sourceNode.GetType().GetProperties().ToList();
+
+            OComponent.CloneObject(sourceNode.transform, destNode.transform);
+            OComponent.CloneObject(sourceNode.rigidbody, destNode.rigidbody);
+            OComponent.CloneObject(sourceNode.collider, destNode.collider, 0, true);
+            OComponent.CloneObject(sourceNode.renderer, destNode.renderer);
             /*
             foreach (PropertyInfo property in properties)
             {
@@ -913,18 +927,18 @@ namespace OrbItProcs {
             {
                 if (field.Name.Equals("_comps"))
                 {
-                    Dictionary<Type, Component> dict = sourceNode.comps;
+                    Dictionary<Type, OComponent> dict = sourceNode.comps;
                     foreach (Type key in dict.Keys)
                     {
                         if (key == typeof(Movement) || key == typeof(Collision)) continue;
                         destNode.addComponent(key, sourceNode.comps[key].active);
-                        Component.CloneComponent(dict[key], destNode.comps[key]);
+                        OComponent.CloneComponent(dict[key], destNode.comps[key]);
                         destNode.comps[key].Initialize(destNode);
                     }
                     foreach (Type key in destNode.comps.Keys.ToList())
                     {
                         if (key == typeof(Movement) || key == typeof(Collision)) continue;
-                        Component component = destNode.comps[key];
+                        OComponent component = destNode.comps[key];
                         MethodInfo mInfo = component.GetType().GetMethod("AfterCloning");
                         if (mInfo != null
                             && mInfo.DeclaringType == component.GetType())
@@ -937,7 +951,8 @@ namespace OrbItProcs {
                 else if ((field.FieldType == typeof(int))
                    || (field.FieldType == typeof(Single))
                    || (field.FieldType == typeof(bool))
-                   || (field.FieldType == typeof(string)))
+                   || (field.FieldType == typeof(string))
+                   || (field.FieldType.IsEnum))
                 {
                     if (!field.Name.Equals("IsDefault"))
                         field.SetValue(destNode, field.GetValue(sourceNode));
@@ -962,7 +977,7 @@ namespace OrbItProcs {
                 }
                 else if (field.FieldType == (typeof(Movement)))
                 {
-                    Component.CloneComponent(sourceNode.movement, destNode.movement);
+                    OComponent.CloneComponent(sourceNode.movement, destNode.movement);
                     destNode.movement.parent = destNode;
                     destNode.movement.AfterCloning();
                 }

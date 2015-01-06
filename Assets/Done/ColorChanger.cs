@@ -10,7 +10,7 @@ namespace OrbItProcs
     /// Constantly changes the color of nodes depending on a variety of modes
     /// </summary>
     [Info(UserLevel.User, "Constantly changes the color of nodes depending on a variety of modes", CompType)]
-    public class ColorChanger : Component
+    public class ColorChanger : OComponent
     {
         public const mtypes CompType = mtypes.affectself;
         public override mtypes compType { get { return CompType; } set { } }
@@ -178,7 +178,7 @@ namespace OrbItProcs
                 {
                     tempinc /= 2f;
                 }
-                parent.material.color = getColorFromHSV(hue, saturation, value);
+                parent.material.color = getColorFromHSV(hue, saturation, value).ToUnityColor();
                 hue = (hue + tempinc) % 360;
             }
             else if ((black = colormode == ColorMode.phaseBlack) || (white = colormode == ColorMode.phaseWhite))

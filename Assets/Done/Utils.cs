@@ -11,6 +11,13 @@ namespace OrbItProcs {
 
     public static class Utils {
         public static float pixelsToUnits = 5;
+
+        public static void SetPosX(this Transform t, float x) { t.position = new Vector3(x, t.position.y, t.position.z); }
+        public static void SetPosY(this Transform t, float y) { t.position = new Vector3(t.position.x, y, t.position.z); }
+        public static void SetPosZ(this Transform t, float z) { t.position = new Vector3(t.position.x, t.position.y, z); }
+        public static void SetVelX(this Rigidbody r, float x) { r.velocity = new Vector3(x, r.velocity.y, r.velocity.z); }
+        public static void SetVelY(this Rigidbody r, float y) { r.velocity = new Vector3(r.velocity.x, y, r.velocity.z); }
+        public static void SetVelZ(this Rigidbody r, float z) { r.velocity = new Vector3(r.velocity.x, r.velocity.y, z); }
         public static Sprite ToSprite(this Texture2D tex)
         {
             Vector2 pivot = new Vector2(0.5f, 0.5f);// / 2 / pixelsToUnits;
@@ -29,6 +36,14 @@ namespace OrbItProcs {
         public static int ToXNAColor(this float f)
         {
             return (int)(f * 255);
+        }
+        public static Color ToUnityColor(this Color c)
+        {
+            c.r /= 255f;
+            c.g /= 255f;
+            c.b /= 255f;
+            c.a /= 255f;
+            return c;
         }
         public static bool AsBool(this int i)
         {
@@ -57,13 +72,13 @@ namespace OrbItProcs {
         }
         public static string RandomName(int tries = 0)
         {
-            var dict = Component.compTypes;
+            var dict = OComponent.compTypes;
             int depth = Utils.random.Next(dict.Count);
             Type t = dict.ElementAt(depth);
             var props = t.GetProperties();
             int i = Utils.random.Next(props.Length);
             var pinfo = props.ElementAt(i);
-            if (tries < 10 && typeof(Component).GetProperty(pinfo.Name) != null)
+            if (tries < 10 && typeof(OComponent).GetProperty(pinfo.Name) != null)
             {
                 return RandomName(++tries);
             }

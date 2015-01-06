@@ -1,0 +1,21 @@
+Initialize engine version: 4.6.1f1 (d1db7a1b5196)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 570 (ID=0x1081)
+    Vendor:   NVIDIA
+    VRAM:     1226 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.047 seconds
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\Mono.Security.dll (this message is harmless)

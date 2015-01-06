@@ -28,7 +28,7 @@ namespace OrbItProcs
 
         public Dictionary<Type, PlayerData> playerDatas = new Dictionary<Type, PlayerData>();
 
-        public Dictionary<ItemSlots, Component> itemSlots = new Dictionary<ItemSlots, Component>()
+        public Dictionary<ItemSlots, OComponent> itemSlots = new Dictionary<ItemSlots, OComponent>()
         {
             {ItemSlots.Y_Yellow, null},
             {ItemSlots.A_Green, null},
@@ -53,7 +53,7 @@ namespace OrbItProcs
         }
         public ItemSlots occupiedSlots = ItemSlots.None;
 
-        public void AddItem(Component comp)
+        public void AddItem(OComponent comp)
         {
             int count = 0;
             foreach(var slot in itemSlots.Keys.ToList())
@@ -82,7 +82,7 @@ namespace OrbItProcs
                 }
             }
         }
-        public void RemoveItem(Component comp)
+        public void RemoveItem(OComponent comp)
         {
             foreach(var slot in itemSlots.Keys.ToList())
             {

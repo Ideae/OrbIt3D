@@ -18,8 +18,8 @@ namespace OrbItProcs
         public SpawnNodes() : base()
         {
             batchSpawnNum = 2;
-            radiusRange = new Toggle<float>(10f, true);
-            radiusCenter = 15f;
+            radiusRange = new Toggle<float>(5f, true);
+            radiusCenter = 7f;
 
             addProcessKeyAction("SpawnNode", KeyCode.Mouse0, OnPress: SpawnNode);
             //addProcessKeyAction("SetSpawnPosition", KeyCodes.LeftShift, OnPress: SetSpawnPosition);
@@ -40,7 +40,9 @@ namespace OrbItProcs
             //
             //n.body.angularVelocity = 2;
             //n.collision.active = false;
-            n.addComponent<Gravity>(true);
+
+            //n.addComponent<Gravity>(true);
+            n.addComponent<ColorChanger>(true);
         }
         public void RemoveAll()
         {
