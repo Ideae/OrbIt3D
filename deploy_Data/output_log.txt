@@ -12,7 +12,7 @@ Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Manag
 Loading C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\UnityEngine.UI.dll (this message is harmless)
 Loading C:\Users\zacktibia\Documents\GitHub\OrbIt3D\deploy_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-- Completed reload, in  0.047 seconds
+- Completed reload, in  0.048 seconds
 <RI> Initializing input.
 <RI> Input initialized.
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0

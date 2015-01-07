@@ -187,6 +187,7 @@ namespace OrbItProcs
             float force = (new Vector3(x, y, z)).magnitude;
             Vector3 v = (OrbIt.origin - pos).normalized * force;
             parent.rigidbody.AddForce(v);
+            //OVRManager.display.isDirectMode
         }
 
 
