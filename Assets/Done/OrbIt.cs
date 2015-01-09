@@ -10,11 +10,14 @@ public class OrbIt : MonoBehaviour {
     public static OrbIt game;
     public static Assets assets;
     public Camera camera;
+    public GameObject oculusCamera;
     //public static UserInterface ui;
     //public static GameTime gametime;
     public static bool soundEnabled = false;
     public static bool isFullScreen = false;
     public KeyManager keyManager;
+    public bool UseOculus = false;
+    
     #endregion
 
     #region ///////////////////// PROPERTIES ///////////////////
@@ -40,6 +43,17 @@ public class OrbIt : MonoBehaviour {
         Width = roomIndicator.GetComponent<RoomDimensions>().width;
         Height = roomIndicator.GetComponent<RoomDimensions>().height;
         Depth = roomIndicator.GetComponent<RoomDimensions>().depth;
+
+        if (UseOculus)
+        {
+            oculusCamera.SetActive(true);
+            camera.gameObject.SetActive(false);
+        }
+        else
+        {
+            oculusCamera.SetActive(false);
+            camera.gameObject.SetActive(true);
+        }
 
     }
 

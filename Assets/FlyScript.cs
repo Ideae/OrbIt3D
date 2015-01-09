@@ -5,7 +5,16 @@ public class FlyScript : MonoBehaviour {
     OVRCameraRig cameraRig = null;
     public float steering = 0.1f;
     public float flyspeed = 0.1f;
-	// Use this for initialization
+	
+    //void Awake()
+    //{
+    //    Debug.Log("directmode : " + OVRManager.display.isDirectMode);
+    //    if (!OVRManager.display.isDirectMode)
+    //    {
+    //        gameObject.SetActive(false);
+    //        GameObject.Find("Main Camera").SetActive(true);
+    //    }
+    //}
 	void Start () {
         cameraRig = GetComponent<OVRCameraRig>();
 	}

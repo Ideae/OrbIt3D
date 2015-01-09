@@ -112,6 +112,7 @@
     <Compile Include="Assets\OVR\Scripts\Util\OVRScreenFade.cs" />
     <Compile Include="Assets\OVR\Scripts\Util\OVRUGUI.cs" />
     <Compile Include="Assets\OVR\Scripts\Util\OVRVisionGuide.cs" />
+    <Compile Include="Assets\PlayerController.cs" />
     <Compile Include="Assets\RoomDimensions.cs" />
     <Compile Include="Assets\RuntimeInspector.cs" />
     <Compile Include="Assets\Shooter.cs" />
