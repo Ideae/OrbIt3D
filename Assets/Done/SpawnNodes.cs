@@ -12,8 +12,8 @@ namespace OrbItProcs
         int rightClickMax = 1;//
         public int batchSpawnNum { get; set; }
 
-        public Toggle<float> radiusRange { get; set; }
-        public float radiusCenter { get; set; }
+        public static Toggle<float> radiusRange { get; set; }
+        public static float radiusCenter { get; set; }
 
         public SpawnNodes() : base()
         {
@@ -21,16 +21,16 @@ namespace OrbItProcs
             radiusRange = new Toggle<float>(5f, true);
             radiusCenter = 7f;
 
-            addProcessKeyAction("SpawnNode", KeyCode.Mouse0, OnPress: SpawnNode);
+            //addProcessKeyAction("SpawnNode", KeyCode.Mouse0, OnPress: ShootNode);
             //addProcessKeyAction("SetSpawnPosition", KeyCodes.LeftShift, OnPress: SetSpawnPosition);
-            addProcessKeyAction("BatchSpawn", KeyCode.Mouse1, OnHold: BatchSpawn);
+            //addProcessKeyAction("BatchSpawn", KeyCode.LeftShift, KeyCode.Mouse0, OnHold: BatchSpawn);
             //addProcessKeyAction("DirectionalLaunch", KeyCodes.LeftShift, KeyCodes.RightClick, OnHold: DirectionalLaunch);
             addProcessKeyAction("testing", KeyCode.Slash, OnPress: TestingStuff);
             addProcessKeyAction("removeall", KeyCode.Delete, OnPress: RemoveAll);
             addProcessKeyAction("removeall", KeyCode.Escape, OnPress: RemoveAll2);
         }
 
-        public void SetRadius(Node n)
+        public static void SetRadius(Node n)
         {
             n.radius = radiusCenter;
             if (radiusRange.enabled)
@@ -41,7 +41,7 @@ namespace OrbItProcs
             //n.body.angularVelocity = 2;
             //n.collision.active = false;
 
-            //n.addComponent<Gravity>(true);
+            n.addComponent<Gravity>(true);
             n.addComponent<ColorChanger>(true);
         }
         public void RemoveAll()
@@ -54,7 +54,6 @@ namespace OrbItProcs
         }
         public void RemoveAll2()
         {
-            
             if (room.activeGroup.fullSet.Count == 0)
             {
                 Application.Quit();
@@ -64,7 +63,15 @@ namespace OrbItProcs
 
         public void SpawnNode()
         {
-            Node n = room.spawnNode((int)OInput.WorldMousePos.x, (int)OInput.WorldMousePos.y);
+            Node n = room.spawnNode(OInput.WorldMousePos.x, OInput.WorldMousePos.y);
+
+            SetRadius(n);
+        }
+        public void ShootNode()
+        {
+            Node n = OrbIt.game.room.spawnNode(PlayerController.player.transform.position);
+            Vector3 vel = PlayerController.player.transform.rotation * Vector3.forward * 10f;
+            n.rigidbody.velocity = vel;
             SetRadius(n);
         }
         #region Testing Region

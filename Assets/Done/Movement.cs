@@ -67,7 +67,7 @@ namespace OrbItProcs
             if (parent != null) this.parent = parent;
             randInitialVel = new Toggle<float>(8f);
             pushable = true;
-            mode = movemode.forceback;
+            mode = movemode.wallbounce;
             effvelocityMode = false;
             lockZAxis = false;
         }

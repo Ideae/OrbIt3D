@@ -294,6 +294,7 @@ namespace OrbItProcs {
             gameobject = (GameObject)GameObject.Instantiate(prefab);
             gameobject.SetActive(false);
             gameobject.GetComponent<NodeScript>().InitNodeScript(this);
+            gameobject.name = name;
             texture = _texture;
 
             meta = new Meta(this);

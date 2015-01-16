@@ -303,10 +303,17 @@ namespace OrbItProcs {
             }
             return found;
         }
-        public Node spawnNode(int worldMouseX, int worldMouseY)
+        public Node spawnNode(float worldMouseX, float worldMouseY)
         {
             Dictionary<object, object> userP = new Dictionary<object, object>() {
                                 { nodeE.position, new Vector3(worldMouseX,worldMouseY, 0f) },
+            };
+            return spawnNode(userP);
+        }
+        public Node spawnNode(Vector3 worldPos)
+        {
+            Dictionary<object, object> userP = new Dictionary<object, object>() {
+                                { nodeE.position, worldPos },
             };
             return spawnNode(userP);
         }

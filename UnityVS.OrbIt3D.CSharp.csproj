@@ -116,6 +116,7 @@
     <Compile Include="Assets\RoomDimensions.cs" />
     <Compile Include="Assets\RuntimeInspector.cs" />
     <Compile Include="Assets\Shooter.cs" />
+    <Compile Include="Assets\Trail.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\OVR\Shaders\OVRGUIShader.shader" />
@@ -124,6 +125,7 @@
     <None Include="Assets\Plugins\x86\donotdelete.txt" />
     <None Include="Assets\Plugins\x86_64\donotdelete.txt" />
     <None Include="Assets\Resources\CircularShader.shader" />
+    <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

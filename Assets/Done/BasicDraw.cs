@@ -71,7 +71,8 @@ namespace OrbItProcs
         public void UpdateColor()
         {
             if (parent == null) return;
-            Color c = parent.renderer.material.color;
+            Color c = parent.material.color;
+            //Debug.Log(c);
             Red = c.r;
             Green = c.g;
             Blue = c.b;

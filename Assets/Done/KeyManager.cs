@@ -395,7 +395,8 @@ namespace OrbItProcs
                         ka.pressAction();
                     }
                     //if (!PressedBundles.ContainsKey(kb)) 
-                    PressedBundles.Add(kb, ka); //exception
+                    //PressedBundles.Add(kb, ka); //exception
+                    PressedBundles[kb] = ka;
                 }
                 
             }

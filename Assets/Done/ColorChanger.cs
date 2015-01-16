@@ -249,6 +249,12 @@ namespace OrbItProcs
                 //Console.WriteLine(dist + "  " + huesign);
                 parent.material.color = getColorFromHSV(hue, saturation, value);
             }
+
+            TrailRenderer tr = parent.gameobject.GetComponent<TrailRenderer>();
+            if (tr)
+            {
+                tr.material.SetColor("_TintColor", parent.material.color);
+            }
         }
 
         private float huedest = 0;
